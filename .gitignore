@@ -1,0 +1,10 @@
+/node_modules/
+/.idea/
+
+.env
+.env.*
+!.env.example
+bunq-cli-storage.json
+
+
+yarn-error.log
