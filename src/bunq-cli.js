@@ -38,7 +38,7 @@ module.exports = async () => {
 
     const customStore = CustomStore(storageLocation);
     const bunqJSClient = new BunqJSClient(customStore);
-    writeLine(`Storing data at ${storageLocation}`);
+    writeLine(`Storing data at ${chalk.cyan(storageLocation)}`);
 
     // gather a list of endpoints the user can choose from
     const endpoints = {
@@ -72,10 +72,10 @@ module.exports = async () => {
     customStore.set("DEVICE_NAME", DEVICE_NAME);
 
     const apiKeyPreview = ENVIRONMENT === "SANDBOX" ? API_KEY.substr(0, 16) : API_KEY.substr(0, 8);
-    writeLine(`API Key starts with: ${apiKeyPreview}`);
-    writeLine(`Environment: ${ENVIRONMENT}`);
-    writeLine(`Device name: ${DEVICE_NAME}`);
-    writeLine(`Encryption key starts with: ${ENCRYPTION_KEY.substr(0, 8)}\n`);
+    writeLine(`API Key starts with: ${chalk.cyan(apiKeyPreview)}`);
+    writeLine(`Environment: ${chalk.cyan(ENVIRONMENT)}`);
+    writeLine(`Device name: ${chalk.cyan(DEVICE_NAME)}`);
+    writeLine(`Encryption key starts with: ${chalk.cyan(ENCRYPTION_KEY.substr(0, 8))}\n`);
 
     writeLine(chalk.yellow("Setting up the bunqJSClient [0/4] -> running client"));
 
@@ -102,7 +102,7 @@ module.exports = async () => {
 
     writeLine(chalk.yellow("Fetching monetary accounts ..."));
     const monetaryAccounts = await bunqJSClient.api.monetaryAccount.list(user.id);
-    writeLine(chalk.green(`Fetched ${monetaryAccounts.length} monetary accounts.\n`), true);
+    writeLine(chalk.green(`Fetched ${monetaryAccounts.length} monetary accounts.\n\n`), true);
 
     // get the endpoint the user wants to use
     const endpoint = await endpointsPrompt(endpoints);
