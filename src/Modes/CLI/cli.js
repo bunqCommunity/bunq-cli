@@ -1,9 +1,9 @@
 const BunqJSClient = require("@bunq-community/bunq-js-client").default;
 const argv = require("yargs").argv;
 
-const getEndpoints = require("../getEndpoints");
-const CustomStore = require("../customStore");
-const { randomHex } = require("../Utils");
+const getEndpoints = require("../../getEndpoints");
+const CustomStore = require("../../customStore");
+const { randomHex } = require("../../Utils");
 
 module.exports = async () => {
     console.log("\nNot implemented");

@@ -1,7 +1,7 @@
-const { Select, Input } = require("enquirer");
+const { Select, Password } = require("enquirer");
 const { randomHex } = require("../Utils");
 
-module.exports = async () => {
+module.exports = async ENCRYPTION_KEY => {
     const prompt = new Select({
         message: "No encryption key is set, would you like to enter one or have one generated for you?",
         choices: [{ message: "Generate a new key", value: "generate" }, { message: "Enter a key", value: "custom" }]
@@ -11,8 +11,9 @@ module.exports = async () => {
     if (encryptionKeyType === "generate") {
         return randomHex(32);
     } else {
-        const inputPrompt = new Input({
-            message: "Enter a 16, 24 or 32 bit hex encoded encryption key"
+        const inputPrompt = new Password({
+            message: "Enter a 16, 24 or 32 bit hex encoded encryption key",
+            initialValue: ENCRYPTION_KEY ? ENCRYPTION_KEY : ""
         });
 
         return inputPrompt.run();

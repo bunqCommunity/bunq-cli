@@ -1,14 +1,5 @@
 const { Password, Select } = require("enquirer");
 
-module.exports = async (initialApiKey = "") => {
-    const apiKeyPrompt = new Input({
-        message: "Please enter a  API key",
-        initial: initialApiKey
-    });
-
-    return apiKeyPrompt.run();
-};
-
 module.exports = async bunqJSClient => {
     const prompt = new Select({
         message: "No API key is set, would you like to enter one or have one generated for you?",
