@@ -7,7 +7,7 @@ bunqCLI()
     .then(() => process.exit())
     .catch(error => {
         if (error.response && error.response.data) {
-            console.error("API Error");
+            console.error("\nAPI Error");
             console.error(error.response.data);
         } else {
             console.error(error);

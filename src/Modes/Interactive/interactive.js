@@ -78,7 +78,14 @@ const inputCycle = async interactiveData => {
         } else {
             // writeLine(`${chalk.cyan("e")} - Use API endpoint`);
         }
+
         writeLine(`\n${chalk.cyan("q")} - to quit`);
+
+        const handleTest = (handler) => {
+            clearConsole();
+            stdin.removeListener("data", inputListener);
+            return resolve(handler(interactiveData));
+        }
 
         const inputListener = key => {
             // q or ctrl+c
@@ -87,14 +94,10 @@ const inputCycle = async interactiveData => {
             }
 
             if (key === "s") {
-                clearConsole();
-                stdin.removeListener("data", inputListener);
-                return resolve(SetupApiKey(interactiveData));
+                return handleTest(SetupApiKey);
             }
             // if (key === "e") {
-            //     clearConsole();
-            //     stdin.removeListener("data", inputListener);
-            //     return resolve(CallEndpoint(interactiveData));
+            //     return handleTest(CallEndpoint);
             // }
 
             // process.stdout.write(key);

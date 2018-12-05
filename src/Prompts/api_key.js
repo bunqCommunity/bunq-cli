@@ -15,7 +15,7 @@ module.exports = async bunqJSClient => {
     } else {
         const inputPrompt = new Password({
             message: "Enter a valid API key",
-            validate: value => value || value.length === 64
+            validate: value => value && value.length === 64
         });
 
         return inputPrompt.run();
