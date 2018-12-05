@@ -1,3 +1,4 @@
+const path = require("path");
 const crypto = require("crypto");
 
 let Utils = {};
@@ -19,5 +20,15 @@ Utils.write = input => {
     process.stdout.write(input);
 };
 Utils.clearConsole = () => console.log("\033[2J");
+
+Utils.normalizePath = inputPath => {
+    if (inputPath[0] === "/" || inputPath[1] === ":") {
+        // likely an absolute path
+    } else {
+        inputPath = path.join(process.cwd(), inputPath);
+    }
+
+    return inputPath;
+};
 
 module.exports = Utils;

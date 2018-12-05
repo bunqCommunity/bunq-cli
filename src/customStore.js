@@ -51,11 +51,6 @@ module.exports = (fileLocation = false) => {
         };
     }
 
-    if (fileLocation[0] === "/") {
-    } else if (fileLocation[0] === ".") {
-        fileLocation = path.join(process.cwd(), fileLocation);
-    }
-
     const store = new Store(fileLocation);
     return {
         get: key => store.get(key),

@@ -1,6 +1,6 @@
 const { Password, Select } = require("enquirer");
 
-module.exports = async bunqJSClient => {
+module.exports = async (bunqJSClient, API_KEY) => {
     const prompt = new Select({
         message: "No API key is set, would you like to enter one or have one generated for you?",
         choices: [
@@ -15,7 +15,8 @@ module.exports = async bunqJSClient => {
     } else {
         const inputPrompt = new Password({
             message: "Enter a valid API key",
-            validate: value => value && value.length === 64
+            validate: value => value && value.length === 64,
+            initialValue: API_KEY ? API_KEY : ""
         });
 
         return inputPrompt.run();

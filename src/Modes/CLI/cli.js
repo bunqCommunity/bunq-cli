@@ -9,9 +9,9 @@ module.exports = async () => {
     console.log("\nNot implemented");
     return;
     // empty = default location or false/undefined = memory only
-    const storageLocation = argv.save || false;
+    const saveLocation = argv.save || false;
 
-    const customStore = CustomStore(storageLocation);
+    const customStore = CustomStore(saveLocation);
     const bunqJSClient = new BunqJSClient(customStore);
 
     let API_KEY = argv.apiKey || process.env.BUNQ_CLI_API_KEY;
