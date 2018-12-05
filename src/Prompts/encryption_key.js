@@ -1,12 +1,5 @@
-const crypto = require("crypto");
 const { Select, Input } = require("enquirer");
-
-const randomHex = length => {
-    return crypto
-        .randomBytes(Math.ceil(length / 2))
-        .toString("hex")
-        .slice(0, length);
-};
+const { randomHex } = require("../Utils");
 
 module.exports = async () => {
     const prompt = new Select({

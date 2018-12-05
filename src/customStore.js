@@ -1,9 +1,20 @@
 const fs = require("fs");
+const path = require("path");
+
+const prettify = input => {
+    return JSON.stringify(input, null, "\t");
+};
 
 function Store(path) {
     this.path = path;
-    if (!fs.existsSync(path)) fs.writeFileSync(path, JSON.stringify({}));
-    this.Store = require(path);
+    try{
+        if (!fs.existsSync(path)) {
+            fs.writeFileSync(path, prettify({}));
+        }
+        this.Store = require(path);
+    }catch(ex){
+        throw ex;
+    }
 }
 
 Store.prototype.get = function(key) {
@@ -22,7 +33,7 @@ Store.prototype.del = function(key) {
 };
 
 Store.prototype.save = function() {
-    fs.writeFileSync(this.path, JSON.stringify(this.Store, null, "\t"));
+    fs.writeFileSync(this.path, prettify(this.Store));
 };
 
 function clone(data) {
@@ -38,6 +49,11 @@ module.exports = (fileLocation = false) => {
             set: (key, value) => (store[key] = value),
             remove: key => delete store[key]
         };
+    }
+
+    if (fileLocation[0] === "/") {
+    } else if (fileLocation[0] === ".") {
+        fileLocation = path.join(process.cwd(), fileLocation);
     }
 
     const store = new Store(fileLocation);

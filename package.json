@@ -4,7 +4,7 @@
     "license": "MIT",
     "main": "./index.js",
     "dependencies": {
-        "@bunq-community/bunq-js-client": "^0.33.0",
+        "@bunq-community/bunq-js-client": "^0.35.2",
         "chalk": "^2.4.1",
         "dotenv": "^6.1.0",
         "enquirer": "^2.1.1",

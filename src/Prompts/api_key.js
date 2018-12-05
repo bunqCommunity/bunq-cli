@@ -1,4 +1,4 @@
-const { Input, Select } = require("enquirer");
+const { Password, Select } = require("enquirer");
 
 module.exports = async (initialApiKey = "") => {
     const apiKeyPrompt = new Input({
@@ -22,8 +22,9 @@ module.exports = async bunqJSClient => {
     if (encryptionKeyType === "generate") {
         return bunqJSClient.api.sandboxUser.post();
     } else {
-        const inputPrompt = new Input({
-            message: "Enter a valid API key"
+        const inputPrompt = new Password({
+            message: "Enter a valid API key",
+            validate: value => value || value.length === 64
         });
 
         return inputPrompt.run();
