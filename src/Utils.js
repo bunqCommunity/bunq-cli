@@ -1,5 +1,6 @@
 const path = require("path");
 const crypto = require("crypto");
+const qrcode = require("qrcode-terminal");
 
 let Utils = {};
 
@@ -19,7 +20,7 @@ Utils.write = input => {
     process.stdout.cursorTo(0);
     process.stdout.write(input);
 };
-Utils.clearConsole = () => process.stdout.write('\033c\033[3J');
+Utils.clearConsole = () => process.stdout.write("\033c\033[3J");
 
 Utils.normalizePath = inputPath => {
     if (inputPath[0] === "/" || inputPath[1] === ":") {
@@ -29,6 +30,12 @@ Utils.normalizePath = inputPath => {
     }
 
     return inputPath;
+};
+
+Utils.displayQr = (text, errorLevel = "L") => {
+    qrcode.setErrorLevel(errorLevel);
+    console.log("");
+    qrcode.generate(text);
 };
 
 module.exports = Utils;
