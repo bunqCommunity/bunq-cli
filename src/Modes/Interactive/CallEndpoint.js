@@ -1,37 +1,16 @@
-const path = require("path");
 const chalk = require("chalk");
-const BunqJSClient = require("@bunq-community/bunq-js-client").default;
-const argv = require("yargs").argv;
-
-const package = require("../../../package.json");
+const awaiting = require("awaiting");
 
 const getEndpoints = require("../../getEndpoints");
 const endpointsPrompt = require("../../Prompts/endpoints");
 const monetaryAccountIdPrompt = require("../../Prompts/monetary_account_id");
 
-const writeLine = input => {
-    write(input);
-    process.stdout.write("\n");
-};
-const write = input => {
-    process.stdout.clearLine();
-    process.stdout.cursorTo(0);
-    process.stdout.write(input);
-};
-const clearConsole = () => console.log("\033[2J");
+const { write, writeLine, clearConsole } = require("../../Utils");
 
-module.exports = async (interactiveData) => {
-    clearConsole();
+module.exports = async interactiveData => {
+    writeLine(chalk.blue(`Calling an API endpoint`));
 
-// get the endpoint the user wants to use
-    const endpoint = await endpointsPrompt(interactiveData.endpoints);
+    writeLine(chalk.yellow(`Not implemented yet!`));
 
-// get the monetary account the user wants to use
-    const accountId = await monetaryAccountIdPrompt(interactiveData.monetaryAccounts);
-
-    write(chalk.yellow(`Fetching data from the ${endpoint} endpoint user: ${interactiveData.user.id} and account: ${accountId}`));
-// call the endpoint with the user ID and account ID
-    const result = await endpoints[endpoint](user.id, accountId);
-    writeLine(chalk.green(`${result.length} results for the ${endpoint} endpoint.`));
-
+    return await awaiting.delay(1000);
 };

@@ -1,9 +1,9 @@
-const stdin = process.stdin;
 const path = require("path");
 const chalk = require("chalk");
-const axios = require("axios");
 const BunqJSClient = require("@bunq-community/bunq-js-client").default;
 const argv = require("yargs").argv;
+
+const { Select } = require("enquirer");
 
 const package = require("../../../package.json");
 
@@ -13,7 +13,7 @@ const CustomStore = require("../../customStore");
 const SetupApiKey = require("./SetupApiKey");
 const CallEndpoint = require("./CallEndpoint");
 
-const { write, writeLine, clearConsole, normalizePath } = require("../../Utils");
+const { write, writeLine, clearConsole, normalizePath, separatorChoiceOption } = require("../../Utils");
 
 class DoneError extends Error {
     constructor(props) {
@@ -60,56 +60,58 @@ module.exports = async () => {
     // gather a list of endpoints the user can choose from
     interactiveData.endpoints = getEndpoints(interactiveData.bunqJSClient);
 
-    // set stdin mode
-    stdin.setRawMode(true);
-    stdin.resume();
-    stdin.setEncoding("utf8");
-
     return nextCycle(interactiveData);
 };
 
 const inputCycle = async interactiveData => {
-    return new Promise((resolve, reject) => {
-        const isReady = !!interactiveData.bunqJSClient.apiKey;
+    const isReady = !!interactiveData.bunqJSClient.apiKey;
+    clearConsole();
 
-        clearConsole();
+    const storageText = interactiveData.saveLocation ? `at ${chalk.cyan(interactiveData.saveLocation)}` : "in memory";
+    const readyStatusText = isReady ? chalk.green("ready") : chalk.yellow("Not ready");
 
-        const storageText = interactiveData.saveLocation
-            ? `at ${chalk.cyan(interactiveData.saveLocation)}`
-            : "in memory";
-        const readyStatusText = isReady ? chalk.green("ready") : chalk.yellow("Not ready");
+    writeLine(chalk.blue(`bunq-cli v${package.version} - interactive mode`));
+    writeLine("");
+    writeLine(`Storing data ${storageText}`);
+    writeLine(`bunqJSClient status: ${readyStatusText}`);
+    if (isReady) {
+        writeLine(`User info: ${interactiveData.user.display_name}`);
+        writeLine(`Monetary accounts: ${interactiveData.monetaryAccounts.length}`);
+    }
 
-        writeLine(chalk.blue(`bunq-cli v${package.version} - interactive mode`));
-        writeLine("");
-        writeLine(`Storing data ${storageText}`);
-        writeLine(`bunqJSClient status: ${readyStatusText}\n`);
+    // end info section with newline
+    writeLine("");
 
-        writeLine(`What would you like to do?`);
-        if (!isReady) {
-            writeLine(`${chalk.cyan("s")} - Setup an API key`);
-        } else {
-            writeLine(`${chalk.cyan("e")} - Use API endpoint`);
-        }
+    const choices = [];
 
-        writeLine(`\n${chalk.cyan("q")} - to quit`);
+    if (isReady) {
+        choices.push({ message: "Use an API endpoit", value: "call-endpoint" });
+    }
+    choices.push({ message: isReady ? "Modify API key" : "Setup an API key", value: "setup-api-key" });
+    choices.push(separatorChoiceOption);
+    choices.push({ message: "Quit", value: "quit" });
 
-        const handleTest = handler => {
+    const result = await new Select({
+        message: "What would you like to do",
+        choices: choices
+    }).run();
+
+    console.log(result);
+
+    switch (result) {
+        case "call-endpoint":
             clearConsole();
-            stdin.removeListener("data", inputListener);
-            return resolve(handler(interactiveData));
-        };
-
-        const inputListener = key => {
-            // q or ctrl+c
-            if (key === "\u0003" || key === "q") {
-                return reject(new DoneError());
-            }
-
-            if (key === "s") return handleTest(SetupApiKey);
-            if (key === "e") return handleTest(CallEndpoint);
-        };
-        stdin.on("data", inputListener);
-    });
+            return CallEndpoint(interactiveData);
+            break;
+        case "setup-api-key":
+            clearConsole();
+            return SetupApiKey(interactiveData);
+            break;
+        case "quit":
+            // break out of loop
+            throw new DoneError();
+            break;
+    }
 };
 
 // infinitly loops while waiting

@@ -1,4 +1,5 @@
 const path = require("path");
+const chalk = require("chalk");
 const crypto = require("crypto");
 const qrcode = require("qrcode-terminal");
 
@@ -37,5 +38,7 @@ Utils.displayQr = (text, errorLevel = "L") => {
     console.log("");
     qrcode.generate(text);
 };
+
+Utils.separatorChoiceOption = { value: chalk.grey("─────────────────────────"), role: "separator" };
 
 module.exports = Utils;
