@@ -27,6 +27,8 @@ module.exports = async bunqCLI => {
     clearConsole();
     writeLine(chalk.blue(`bunq-cli v${package.version} - interactive mode`));
 
+    bunqCLI.interactive = true;
+
     // do an initial run
     await SetupApiKey(bunqCLI, true);
 

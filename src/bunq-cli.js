@@ -19,6 +19,9 @@ module.exports = async () => {
     const bunqCLI = {
         bunqJSClient: null,
 
+        // pretty output message
+        interactive: !argv.cli,
+
         // public/bunqJSClient storage handler and location details
         storage: null,
         saveLocation: false,
@@ -63,7 +66,7 @@ module.exports = async () => {
         }
 
         // setup a file handler
-        bunqCLI.outputHandler = FileOutput(bunqCLI.outputLocation);
+        bunqCLI.outputHandler = FileOutput(bunqCLI.outputLocation, bunqCLI.interactive);
     }
 
     bunqCLI.storage = CustomStore(bunqCLI.saveLocation);
@@ -72,7 +75,7 @@ module.exports = async () => {
     // gather a list of endpoints the user can choose from
     bunqCLI.endpoints = getEndpoints(bunqCLI);
 
-    if (!argv.cli) {
+    if (bunqCLI.interactive) {
         return InteractiveMode(bunqCLI);
     } else {
         return CLIMode(bunqCLI);
