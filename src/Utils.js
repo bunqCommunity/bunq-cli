@@ -52,6 +52,17 @@ Utils.formatMoney = moneyNumber => {
     });
 };
 
-Utils.separatorChoiceOption = () => ({ value: chalk.grey("─────────────────────────"), role: "separator" });
+Utils.separatorChoiceOption = () => ({ value: chalk.grey("─────────"), role: "separator" });
+
+Utils.startTime = () => process.hrtime();
+Utils.endTime = startTime => process.hrtime(startTime);
+Utils.endTimeFormatted = startTime => {
+    const endTime = Utils.endTime(startTime);
+    let timePassedLabel = `${endTime[1] / 1000000}ms`;
+    if (endTime[0] > 0) {
+        timePassedLabel = `${endTime[0]}s ${timePassedLabel}`;
+    }
+    return timePassedLabel;
+};
 
 module.exports = Utils;

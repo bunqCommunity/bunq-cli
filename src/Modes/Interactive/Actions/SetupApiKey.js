@@ -6,10 +6,11 @@ const environmentPrompt = require("../../../Prompts/environment_prompt");
 const deviceNamePrompt = require("../../../Prompts/device_name");
 const encryptionKeyPrompt = require("../../../Prompts/encryption_key");
 
-const { write, writeLine, clearConsole } = require("../../../Utils");
+const { write, writeLine, startTime, endTimeFormatted } = require("../../../Utils");
 
 module.exports = async (bunqCLI, skipExistingQuestion = false) => {
     writeLine(chalk.blue(`Setting up bunqJSClient`));
+    writeLine("");
 
     const bunqJSClient = bunqCLI.bunqJSClient;
     const saveData = bunqCLI.saveData;
@@ -82,14 +83,20 @@ module.exports = async (bunqCLI, skipExistingQuestion = false) => {
         writeLine(chalk.green("Finished setting up the bunqJSClient"));
 
         write(chalk.yellow("Fetching users list ..."));
+        const userStartTime = startTime();
         const users = await bunqJSClient.getUsers(true);
         bunqCLI.userType = Object.keys(users)[0];
         bunqCLI.user = users[bunqCLI.userType];
-        writeLine(chalk.green(`Fetched a ${bunqCLI.userType} account.`));
+        writeLine(chalk.green(`Fetched a ${bunqCLI.userType} account (${endTimeFormatted(userStartTime)})`));
 
         write(chalk.yellow("Fetching monetary accounts ..."));
+        const accountStartTime = startTime();
         bunqCLI.monetaryAccounts = await bunqJSClient.api.monetaryAccount.list(bunqCLI.user.id);
-        writeLine(chalk.green(`Fetched ${bunqCLI.monetaryAccounts.length} monetary accounts.\n`));
+        writeLine(
+            chalk.green(
+                `Fetched ${bunqCLI.monetaryAccounts.length} monetary accounts (${endTimeFormatted(accountStartTime)})\n`
+            )
+        );
 
         writeLine("\n" + chalk.cyan("Finished setting up bunqJSClient."));
     }

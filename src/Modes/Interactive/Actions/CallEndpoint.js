@@ -2,10 +2,11 @@ const chalk = require("chalk");
 
 const endpointsPrompt = require("../../../Prompts/endpoints");
 
-const { write, writeLine } = require("../../../Utils");
+const { write, writeLine, startTime, endTimeFormatted } = require("../../../Utils");
 
 module.exports = async bunqCLI => {
     writeLine(chalk.blue(`Calling an API endpoint`));
+    writeLine("");
 
     const selectedEndpoint = await endpointsPrompt(bunqCLI.endpoints);
 
@@ -15,17 +16,12 @@ module.exports = async bunqCLI => {
     writeLine("");
     write(chalk.yellow(`Fetching the endpoint ...`));
 
-    const startTime = process.hrtime();
+    const startTime1 = startTime();
 
     // call the endpoint with the actual input values
     const apiEndpointResponse = await selectedEndpoint.handle();
 
-    const endTime = process.hrtime(startTime);
-    let timePassedLabel = `${endTime[1] / 1000000}ms`;
-    if (endTime[0] > 0) {
-        timePassedLabel = `${endTime[0]}s ${timePassedLabel}`;
-    }
-
+    const timePassedLabel = endTimeFormatted(startTime1);
     writeLine(chalk.green(`Fetched the endpoint! (${timePassedLabel})`));
 
     // write to file if possible
