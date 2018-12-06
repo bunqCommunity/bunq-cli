@@ -73,7 +73,6 @@ const inputCycle = async interactiveData => {
     const storageText = interactiveData.saveLocation ? `at ${chalk.cyan(interactiveData.saveLocation)}` : "in memory";
     const readyStatusText = isReady ? chalk.green("ready") : chalk.yellow("Not ready");
 
-    writeLine(chalk.blue(`bunq-cli v${package.version} - interactive mode`));
     writeLine("");
     writeLine(`Storing data ${storageText}`);
     writeLine(`bunqJSClient status: ${readyStatusText}`);
