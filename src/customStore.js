@@ -7,12 +7,12 @@ const prettify = input => {
 
 function Store(path) {
     this.path = path;
-    try{
+    try {
         if (!fs.existsSync(path)) {
             fs.writeFileSync(path, prettify({}));
         }
         this.Store = require(path);
-    }catch(ex){
+    } catch (ex) {
         throw ex;
     }
 }

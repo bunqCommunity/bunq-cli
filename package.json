@@ -3,6 +3,12 @@
     "version": "0.0.1",
     "license": "MIT",
     "main": "./index.js",
+    "bin": {
+        "bunq-cli": "bin/cli.js"
+    },
+    "scripts": {
+        "prettier": "./node_modules/.bin/prettier --tab-width 4 --print-width 120 --write \"+(tests|bin|src)/**/**.+(js|ts)\""
+    },
     "dependencies": {
         "@bunq-community/bunq-js-client": "^0.35.2",
         "awaiting": "^3.0.0",
@@ -12,6 +18,9 @@
         "json-store": "^1.0.0",
         "qrcode-terminal": "^0.12.0",
         "yargs": "^12.0.5"
+    },
+    "devDependencies": {
+        "prettier": "^1.15.3"
     },
     "engines": {
         "node": ">=8.0.0"

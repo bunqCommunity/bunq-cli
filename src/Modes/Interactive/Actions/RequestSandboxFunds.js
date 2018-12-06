@@ -5,15 +5,15 @@ const monetaryAccountIdPrompt = require("../../../Prompts/monetary_account_id");
 
 const { write, writeLine, clearConsole } = require("../../../Utils");
 
-module.exports = async interactiveData => {
+module.exports = async bunqCLI => {
     writeLine(chalk.blue(`Requesting sandbox funds`));
 
-    const accountId = await monetaryAccountIdPrompt(interactiveData.monetaryAccounts);
+    const accountId = await monetaryAccountIdPrompt(bunqCLI.monetaryAccounts);
     if (!accountId) return;
 
     write(chalk.yellow(`Requesting money from sugar daddy for account: ${accountId} ... `));
-    await interactiveData.bunqJSClient.api.requestInquiry.post(
-        interactiveData.user.id,
+    await bunqCLI.bunqJSClient.api.requestInquiry.post(
+        bunqCLI.user.id,
         accountId,
         "Money pleaseee",
         {
@@ -29,9 +29,7 @@ module.exports = async interactiveData => {
 
     // when completed, update the stored monetary accounts list
     write(chalk.yellow(`Updating monetary account list ... `));
-    interactiveData.monetaryAccounts = await interactiveData.bunqJSClient.api.monetaryAccount.list(
-        interactiveData.user.id
-    );
+    bunqCLI.monetaryAccounts = await bunqCLI.bunqJSClient.api.monetaryAccount.list(bunqCLI.user.id);
     writeLine(chalk.green(`Updated monetary accounts!`));
 
     return await awaiting.delay(500);

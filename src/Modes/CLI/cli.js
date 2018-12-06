@@ -5,7 +5,7 @@ const getEndpoints = require("../../getEndpoints");
 const CustomStore = require("../../customStore");
 const { randomHex } = require("../../Utils");
 
-module.exports = async () => {
+module.exports = async bunqCLI => {
     console.log("\nNot implemented");
     return;
     // empty = default location or false/undefined = memory only

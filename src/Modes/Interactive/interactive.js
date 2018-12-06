@@ -27,93 +27,52 @@ class DoneError extends Error {
     }
 }
 
-module.exports = async () => {
+module.exports = async bunqCLI => {
     clearConsole();
     writeLine(chalk.blue(`bunq-cli v${package.version} - interactive mode`));
 
-    const interactiveData = {
-        bunqJSClient: null,
-
-        storage: null,
-        saveLocation: false,
-        saveData: false,
-
-        outputLocation: false,
-        outputData: false,
-
-        argv: argv,
-        endpoints: {},
-        apiData: {}
-    };
-
-    // empty = default location, string = custom location, false/undefined = memory only
-    if (argv.save) {
-        // custom or default value if defined
-        interactiveData.saveLocation =
-            argv.save !== true ? normalizePath(argv.save) : path.join(os.homedir(), "bunq-cli.json");
-        interactiveData.saveData = true;
-    }
-
-    if (argv.output || argv.output === "file") {
-        const outputLocation = argv.outputLocation || false;
-
-        // custom or default value if defined
-        interactiveData.outputLocation =
-            outputLocation === true || outputLocation === false
-                ? path.join(os.homedir(), "bunq-cli-api-data")
-                : normalizePath(outputLocation);
-        interactiveData.outputData = true;
-
-        try {
-            const directoryExists = fs.existsSync(interactiveData.outputLocation);
-            if (!directoryExists) {
-                fs.mkdirSync(interactiveData.outputLocation);
-            }
-        } catch (ex) {
-            throw new Error(`Failed to find or create the given output folder at: ${interactiveData.outputLocation}`);
-        }
-    }
-
-    interactiveData.storage = CustomStore(interactiveData.saveLocation);
-    interactiveData.bunqJSClient = new BunqJSClient(interactiveData.storage);
+    bunqCLI.storage = CustomStore(bunqCLI.saveLocation);
+    bunqCLI.bunqJSClient = new BunqJSClient(bunqCLI.storage);
 
     // gather a list of endpoints the user can choose from
-    interactiveData.endpoints = getEndpoints(interactiveData.bunqJSClient);
+    bunqCLI.endpoints = getEndpoints(bunqCLI.bunqJSClient);
 
     // do an initial run
-    await SetupApiKey(interactiveData, true);
+    await SetupApiKey(bunqCLI, true);
 
-    return nextCycle(interactiveData);
+    return nextCycle(bunqCLI);
 };
 
-const inputCycle = async interactiveData => {
-    const isReady = !!interactiveData.bunqJSClient.apiKey;
-    const isSandbox = interactiveData.bunqJSClient.Session.environment === "SANDBOX";
+const inputCycle = async bunqCLI => {
+    const isReady = !!bunqCLI.bunqJSClient.apiKey;
+    const isSandbox = bunqCLI.bunqJSClient.Session.environment === "SANDBOX";
 
-    const storageText = interactiveData.saveLocation ? `at ${chalk.cyan(interactiveData.saveLocation)}` : "in memory";
+    const storageText = bunqCLI.saveLocation ? `at ${chalk.cyan(bunqCLI.saveLocation)}` : "in memory";
     const readyStatusText = isReady ? chalk.green("ready") : chalk.yellow("Not ready");
 
     writeLine("");
     writeLine(`Storing bunqJSClient data ${storageText}`);
-    if (interactiveData.outputData) {
-        writeLine(`Outputting API data in ${chalk.cyan(interactiveData.outputLocation)}`);
+    if (bunqCLI.outputData) {
+        writeLine(`Outputting API data in ${chalk.cyan(bunqCLI.outputLocation)}`);
     }
     writeLine(`bunqJSClient status: ${readyStatusText}`);
+
+    writeLine(""); // end bunq-cli
+
     if (isReady) {
-        const totalAccountBalance = interactiveData.monetaryAccounts.reduce((total, account) => {
+        const totalAccountBalance = bunqCLI.monetaryAccounts.reduce((total, account) => {
             const accountType = Object.keys(account)[0];
             const accountInfo = account[accountType];
 
             return total + parseFloat(accountInfo.balance.value);
         }, 0);
 
-        writeLine(`User info: ${interactiveData.user.display_name}`);
-        writeLine(`Monetary accounts: ${interactiveData.monetaryAccounts.length}`);
+        writeLine(`User info: ${bunqCLI.user.display_name}`);
+        writeLine(`Monetary accounts: ${bunqCLI.monetaryAccounts.length}`);
         writeLine(`Total account balance: ${formatMoney(totalAccountBalance)}`);
     }
 
-    // end info section with newline
-    writeLine("");
+    writeLine(""); // end api info
 
     const choices = [];
 
@@ -132,35 +91,30 @@ const inputCycle = async interactiveData => {
         choices: choices
     }).run();
 
+    clearConsole();
+
     switch (result) {
         case "call-endpoint":
-            clearConsole();
-            return CallEndpoint(interactiveData);
+            return CallEndpoint(bunqCLI);
             break;
         case "request-sandbox-funds":
-            clearConsole();
-            return RequestSandboxFunds(interactiveData);
+            return RequestSandboxFunds(bunqCLI);
             break;
         case "setup-api-key":
-            clearConsole();
-            return SetupApiKey(interactiveData);
+            return SetupApiKey(bunqCLI);
             break;
         case "quit":
             // break out of loop
             throw new DoneError();
             break;
-        default:
-            // default to a clear console to prevent duplicate prompts
-            clearConsole();
-            break;
     }
 };
 
 // infinitly loops while waiting
-const nextCycle = async interactiveData => {
+const nextCycle = async bunqCLI => {
     try {
         // wait for this cycle to finished
-        await inputCycle(interactiveData);
+        await inputCycle(bunqCLI);
     } catch (ex) {
         if (ex instanceof DoneError) {
             writeLine(chalk.green("\nFinished"));
@@ -170,5 +124,5 @@ const nextCycle = async interactiveData => {
     }
 
     // go to next cycle once that finishes
-    return nextCycle(interactiveData);
+    return nextCycle(bunqCLI);
 };

@@ -1,5 +1,7 @@
+#!/usr/bin/env node
+
 require("dotenv").config();
-const bunqCLI = require("./src/bunq-cli");
+const bunqCLI = require("../src/bunq-cli");
 
 bunqCLI()
     .then(() => process.exit())

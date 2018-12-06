@@ -8,12 +8,12 @@ const encryptionKeyPrompt = require("../../../Prompts/encryption_key");
 
 const { write, writeLine, clearConsole } = require("../../../Utils");
 
-module.exports = async (interactiveData, skipExistingQuestion = false) => {
+module.exports = async (bunqCLI, skipExistingQuestion = false) => {
     writeLine(chalk.blue(`Setting up bunqJSClient`));
 
-    const bunqJSClient = interactiveData.bunqJSClient;
-    const saveData = interactiveData.saveData;
-    const storage = interactiveData.storage;
+    const bunqJSClient = bunqCLI.bunqJSClient;
+    const saveData = bunqCLI.saveData;
+    const storage = bunqCLI.storage;
 
     const storedApiKey = saveData === false ? false : storage.get("API_KEY");
     const storedEnvironment = saveData === false ? false : storage.get("ENVIRONMENT");
@@ -83,13 +83,13 @@ module.exports = async (interactiveData, skipExistingQuestion = false) => {
 
         write(chalk.yellow("Fetching users list ..."));
         const users = await bunqJSClient.getUsers(true);
-        interactiveData.userType = Object.keys(users)[0];
-        interactiveData.user = users[interactiveData.userType];
-        writeLine(chalk.green(`Fetched a ${interactiveData.userType} account.`));
+        bunqCLI.userType = Object.keys(users)[0];
+        bunqCLI.user = users[bunqCLI.userType];
+        writeLine(chalk.green(`Fetched a ${bunqCLI.userType} account.`));
 
         write(chalk.yellow("Fetching monetary accounts ..."));
-        interactiveData.monetaryAccounts = await bunqJSClient.api.monetaryAccount.list(interactiveData.user.id);
-        writeLine(chalk.green(`Fetched ${interactiveData.monetaryAccounts.length} monetary accounts.\n`));
+        bunqCLI.monetaryAccounts = await bunqJSClient.api.monetaryAccount.list(bunqCLI.user.id);
+        writeLine(chalk.green(`Fetched ${bunqCLI.monetaryAccounts.length} monetary accounts.\n`));
 
         writeLine("\n" + chalk.cyan("Finished setting up bunqJSClient."));
     }
