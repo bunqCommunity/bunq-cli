@@ -87,8 +87,7 @@ module.exports = bunqCLI => {
         "draftPayment",
         "schedulePayment",
         "schedulePaymentBatch",
-        "shareInviteBankInquiry",
-        "card"
+        "shareInviteBankInquiry"
     ];
 
     /**
@@ -149,6 +148,12 @@ module.exports = bunqCLI => {
                     ["userId"]
                 )
             }
+        },
+        card: {
+            label: "Card",
+            methods: {
+                LIST: factory("list-card", userId => bunqJSClient.api.card.list(userId), ["userId"])
+            }
         }
     };
 
@@ -160,19 +165,23 @@ module.exports = bunqCLI => {
             };
         }
         if (!endpoints[defaultEndpoint].methods.LIST) {
-            endpoints[defaultEndpoint].methods.LIST = factory(
-                `list-${defaultEndpoint}`,
-                (userId, accountId) => bunqJSClient.api.event.list(userId, accountId),
-                defaultInputList
-            );
+            if (bunqJSClient.api[defaultEndpoint] && bunqJSClient.api[defaultEndpoint].list) {
+                endpoints[defaultEndpoint].methods.LIST = factory(
+                    `list-${defaultEndpoint}`,
+                    (userId, accountId) => bunqJSClient.api[defaultEndpoint].list(userId, accountId),
+                    defaultInputList
+                );
+            }
         }
         if (!endpoints[defaultEndpoint].methods.GET) {
-            endpoints[defaultEndpoint].methods.GET = factory(
-                `get-${defaultEndpoint}`,
-                (userId, accountId, defaultEndpointId) =>
-                    bunqJSClient.api[defaultEndpoint].list(userId, accountId, defaultEndpointId),
-                [defaultInputList, `${defaultEndpoint}Id`]
-            );
+            if (bunqJSClient.api[defaultEndpoint] && bunqJSClient.api[defaultEndpoint].get) {
+                endpoints[defaultEndpoint].methods.GET = factory(
+                    `get-${defaultEndpoint}`,
+                    (userId, accountId, defaultEndpointId) =>
+                        bunqJSClient.api[defaultEndpoint].get(userId, accountId, defaultEndpointId),
+                    [defaultInputList, `${defaultEndpoint}Id`]
+                );
+            }
         }
     });
 
