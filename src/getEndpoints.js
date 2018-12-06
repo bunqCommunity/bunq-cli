@@ -179,7 +179,7 @@ module.exports = bunqCLI => {
                     `get-${defaultEndpoint}`,
                     (userId, accountId, defaultEndpointId) =>
                         bunqJSClient.api[defaultEndpoint].get(userId, accountId, defaultEndpointId),
-                    [defaultInputList, `${defaultEndpoint}Id`]
+                    [...defaultInputList, `${defaultEndpoint}Id`]
                 );
             }
         }
