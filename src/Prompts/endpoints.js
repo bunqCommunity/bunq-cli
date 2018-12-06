@@ -9,8 +9,9 @@ module.exports = async endpoints => {
             const methodInfo = endpointInfo.methods[method];
 
             const methodInputs = methodInfo.inputs || [];
+            const methodText = methodInputs.length > 0 ? `[${methodInputs.join(", ")}]` : "";
             const name = `${method}: ${endpointInfo.label}`;
-            const message = `${name} [${methodInputs.join(", ")}]`;
+            const message = `${name} ${methodText}`;
 
             choices.push({
                 message: message,
@@ -18,6 +19,10 @@ module.exports = async endpoints => {
                 value: methodInfo
             });
         });
+    });
+
+    choices.sort((choiceA, choiceB) => {
+        return choiceA.message < choiceB.message ? -1 : 1;
     });
 
     const prompt = new AutoComplete({

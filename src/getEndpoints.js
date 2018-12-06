@@ -72,46 +72,109 @@ class Endpoint {
 module.exports = bunqCLI => {
     const bunqJSClient = bunqCLI.bunqJSClient;
 
+    /**
+     * Endpoints in this list will autoload with:
+     * LIST: defaultInputlist
+     * GET: defaultInputlist + endpointNameId
+     */
+    const defaultEndpointList = [
+        "payment",
+        "masterCardAction",
+        "bunqMeTab",
+        "requestInquiry",
+        "requestResponse",
+        "requestInquiryBatch",
+        "draftPayment",
+        "schedulePayment",
+        "schedulePaymentBatch",
+        "shareInviteBankInquiry",
+        "card"
+    ];
+
+    /**
+     * Default values given to an endpoint
+     * @type {string[]}
+     */
     const defaultInputList = ["userId", "accountId"];
+
     const factory = (label, handler, inputs = defaultInputList) => {
         return new Endpoint(bunqCLI, label, handler, inputs);
     };
 
-    return {
+    const endpoints = {
         event: {
             label: "Events",
             methods: {
                 LIST: factory("list-event", userId => bunqJSClient.api.event.list(userId), ["userId"])
             }
         },
-        masterCardAction: {
-            label: "MasterCardAction",
+        user: {
+            label: "User",
             methods: {
-                GET: factory(
-                    "list-masterCardAction",
-                    (userId, accountId, masterCardActionId) =>
-                        bunqJSClient.api.masterCardAction.list(userId, accountId, masterCardActionId),
-                    [...defaultInputList, "masterCardActionId"]
-                ),
-                LIST: factory("list-masterCardAction", (userId, accountId) =>
-                    bunqJSClient.api.masterCardAction.list(userId, accountId)
+                LIST: factory("list-user", () => bunqJSClient.api.user.list(), [])
+            }
+        },
+        monetaryAccount: {
+            label: "MonetaryAccount",
+            methods: {
+                LIST: factory("list-monetaryAccount", userId => bunqJSClient.api.monetaryAccount.list(userId), [
+                    "userId"
+                ])
+            }
+        },
+        monetaryAccountBank: {
+            label: "MonetaryAccountBank",
+            methods: {
+                LIST: factory("list-monetaryAccountBank", userId => bunqJSClient.api.monetaryAccountBank.list(userId), [
+                    "userId"
+                ])
+            }
+        },
+        monetaryAccountJoint: {
+            label: "MonetaryAccountJoint",
+            methods: {
+                LIST: factory(
+                    "list-monetaryAccountJoint",
+                    userId => bunqJSClient.api.monetaryAccountJoint.list(userId),
+                    ["userId"]
                 )
             }
         },
-        payment: {
-            label: "Payments",
+        monetaryAccountSavings: {
+            label: "MonetaryAccountSavings",
             methods: {
-                GET: factory(
-                    "get-payment",
-                    (userId, accountId, paymentId) => bunqJSClient.api.payment.list(userId, accountId, paymentId),
-                    [...defaultInputList, "paymentId"]
-                ),
-                LIST: factory("list-payment", (userId, accountId) => bunqJSClient.api.payment.list(userId, accountId))
+                LIST: factory(
+                    "list-monetaryAccountSavings",
+                    userId => bunqJSClient.api.monetaryAccountSavings.list(userId),
+                    ["userId"]
+                )
             }
         }
-        // bunqMeTabs:
-        // requestResponse:
-        // requestInquiry:
-        // requestInquiryBatch:
     };
+
+    defaultEndpointList.forEach(defaultEndpoint => {
+        if (!endpoints[defaultEndpoint]) {
+            endpoints[defaultEndpoint] = {
+                label: defaultEndpoint,
+                methods: {}
+            };
+        }
+        if (!endpoints[defaultEndpoint].methods.LIST) {
+            endpoints[defaultEndpoint].methods.LIST = factory(
+                `list-${defaultEndpoint}`,
+                (userId, accountId) => bunqJSClient.api.event.list(userId, accountId),
+                defaultInputList
+            );
+        }
+        if (!endpoints[defaultEndpoint].methods.GET) {
+            endpoints[defaultEndpoint].methods.GET = factory(
+                `get-${defaultEndpoint}`,
+                (userId, accountId, defaultEndpointId) =>
+                    bunqJSClient.api[defaultEndpoint].list(userId, accountId, defaultEndpointId),
+                [defaultInputList, `${defaultEndpoint}Id`]
+            );
+        }
+    });
+
+    return endpoints;
 };
