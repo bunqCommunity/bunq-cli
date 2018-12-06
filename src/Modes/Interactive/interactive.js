@@ -7,11 +7,14 @@ const { Select } = require("enquirer");
 
 const package = require("../../../package.json");
 
+// setup helpers
 const getEndpoints = require("../../getEndpoints");
 const CustomStore = require("../../customStore");
 
-const SetupApiKey = require("./SetupApiKey");
-const CallEndpoint = require("./CallEndpoint");
+// interactive actions
+const SetupApiKey = require("./Actions/SetupApiKey");
+const RequestSandboxFunds = require("./Actions/RequestSandboxFunds");
+const CallEndpoint = require("./Actions/CallEndpoint");
 
 const { write, writeLine, clearConsole, normalizePath, separatorChoiceOption } = require("../../Utils");
 
@@ -65,7 +68,7 @@ module.exports = async () => {
 
 const inputCycle = async interactiveData => {
     const isReady = !!interactiveData.bunqJSClient.apiKey;
-    clearConsole();
+    const isSandbox = interactiveData.bunqJSClient.Session.environment === "SANDBOX";
 
     const storageText = interactiveData.saveLocation ? `at ${chalk.cyan(interactiveData.saveLocation)}` : "in memory";
     const readyStatusText = isReady ? chalk.green("ready") : chalk.yellow("Not ready");
@@ -85,10 +88,13 @@ const inputCycle = async interactiveData => {
     const choices = [];
 
     if (isReady) {
-        choices.push({ message: "Use an API endpoit", value: "call-endpoint" });
+        choices.push({ message: "Use an API endpoint", value: "call-endpoint" });
+        if (isSandbox) {
+            choices.push({ message: "Add funds to sandbox account", value: "request-sandbox-funds" });
+        }
     }
     choices.push({ message: isReady ? "Modify API key" : "Setup an API key", value: "setup-api-key" });
-    choices.push(separatorChoiceOption);
+    choices.push(separatorChoiceOption());
     choices.push({ message: "Quit", value: "quit" });
 
     const result = await new Select({
@@ -96,12 +102,14 @@ const inputCycle = async interactiveData => {
         choices: choices
     }).run();
 
-    console.log(result);
-
     switch (result) {
         case "call-endpoint":
             clearConsole();
             return CallEndpoint(interactiveData);
+            break;
+        case "request-sandbox-funds":
+            clearConsole();
+            return RequestSandboxFunds(interactiveData);
             break;
         case "setup-api-key":
             clearConsole();
@@ -110,6 +118,10 @@ const inputCycle = async interactiveData => {
         case "quit":
             // break out of loop
             throw new DoneError();
+            break;
+        default:
+            // default to a clear console to prevent duplicate prompts
+            clearConsole();
             break;
     }
 };

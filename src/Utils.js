@@ -39,6 +39,6 @@ Utils.displayQr = (text, errorLevel = "L") => {
     qrcode.generate(text);
 };
 
-Utils.separatorChoiceOption = { value: chalk.grey("─────────────────────────"), role: "separator" };
+Utils.separatorChoiceOption = () => ({ value: chalk.grey("─────────────────────────"), role: "separator" });
 
 module.exports = Utils;

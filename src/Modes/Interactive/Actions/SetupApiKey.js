@@ -1,12 +1,12 @@
 const chalk = require("chalk");
 
-const useExistingApiKey = require("../../Prompts/use_existing_api_key");
-const apiKeyPrompt = require("../../Prompts/api_key");
-const environmentPrompt = require("../../Prompts/environment_prompt");
-const deviceNamePrompt = require("../../Prompts/device_name");
-const encryptionKeyPrompt = require("../../Prompts/encryption_key");
+const useExistingApiKeyPrompt = require("../../../Prompts/use_existing_api_key");
+const apiKeyPrompt = require("../../../Prompts/api_key");
+const environmentPrompt = require("../../../Prompts/environment_prompt");
+const deviceNamePrompt = require("../../../Prompts/device_name");
+const encryptionKeyPrompt = require("../../../Prompts/encryption_key");
 
-const { write, writeLine, clearConsole } = require("../../Utils");
+const { write, writeLine, clearConsole } = require("../../../Utils");
 
 module.exports = async interactiveData => {
     writeLine(chalk.blue(`Setting up bunqJSClient`));
@@ -26,7 +26,7 @@ module.exports = async interactiveData => {
     let DEVICE_NAME = process.env.DEVICE_NAME || storedDeviceName;
 
     if (API_KEY) {
-        const useKey = await useExistingApiKey();
+        const useKey = await useExistingApiKeyPrompt();
         if (!useKey) API_KEY = "";
     }
 
