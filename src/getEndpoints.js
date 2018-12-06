@@ -96,7 +96,8 @@ module.exports = bunqCLI => {
      */
     const defaultInputList = ["userId", "accountId"];
 
-    const factory = (label, handler, inputs = defaultInputList) => {
+    const factory = (label, handler, inputs = false) => {
+        if (inputs === false) inputs = defaultInputList;
         return new Endpoint(bunqCLI, label, handler, inputs);
     };
 
