@@ -96,8 +96,7 @@ module.exports = bunqCLI => {
      */
     const defaultInputList = ["userId", "accountId"];
 
-    const factory = (label, handler, inputs = false) => {
-        if (inputs === false) inputs = defaultInputList;
+    const factory = (label, handler, inputs = []) => {
         return new Endpoint(bunqCLI, label, handler, inputs);
     };
 
@@ -111,7 +110,7 @@ module.exports = bunqCLI => {
         user: {
             label: "User",
             methods: {
-                LIST: factory("list-user", () => bunqJSClient.api.user.list(), [])
+                LIST: factory("list-user", () => bunqJSClient.api.user.list())
             }
         },
         monetaryAccount: {
