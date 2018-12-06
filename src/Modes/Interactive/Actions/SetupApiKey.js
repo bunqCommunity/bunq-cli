@@ -54,8 +54,9 @@ module.exports = async (bunqCLI, skipExistingQuestion = false) => {
             if (ENVIRONMENT === "SANDBOX" && API_KEY.startsWith("sandbox")) {
                 storage.set("API_KEY", API_KEY);
             } else {
-                // remove api key if environment isn't production
+                // remove api key/encryption from storage if environment isn't production
                 storage.remove("API_KEY");
+                storage.remove("ENCRYPTION_KEY");
             }
         }
     }

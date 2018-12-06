@@ -1,11 +1,4 @@
-const os = require("os");
-const fs = require("fs");
-const path = require("path");
 const chalk = require("chalk");
-const awaiting = require("awaiting");
-const BunqJSClient = require("@bunq-community/bunq-js-client").default;
-const argv = require("yargs").argv;
-
 const { Select } = require("enquirer");
 
 const package = require("../../../package.json");

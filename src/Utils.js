@@ -17,10 +17,11 @@ Utils.writeLine = input => {
     Utils.write(input);
     process.stdout.write("\n");
 };
+Utils.writeRaw = input => process.stdout.write(input);
 Utils.write = input => {
     process.stdout.clearLine();
     process.stdout.cursorTo(0);
-    process.stdout.write(input);
+    Utils.writeRaw(input);
 };
 Utils.clearConsole = () => process.stdout.write("\033c\033[3J");
 

@@ -7,8 +7,8 @@ const { writeLine } = require("../Utils");
 module.exports = (directory = false, interactive = false) => {
     if (!directory) return process.cwd();
 
-    return (apiResponse, type = "generic") => {
-        const fileName = `${new Date().getTime()}-${type}.json`;
+    return (apiResponse, type = "JSON", label = "generic") => {
+        const fileName = `${new Date().getTime()}-${label}.json`;
         const fullPath = path.join(directory, fileName);
 
         fs.writeFileSync(fullPath, JSON.stringify(apiResponse, null, "\t"));

@@ -25,5 +25,5 @@ module.exports = async bunqCLI => {
     writeLine(chalk.green(`Fetched the endpoint! (${timePassedLabel})`));
 
     // write to file if possible
-    bunqCLI.outputHandler(apiEndpointResponse, selectedEndpoint.label);
+    bunqCLI.outputHandler(apiEndpointResponse, "JSON", selectedEndpoint.label);
 };
