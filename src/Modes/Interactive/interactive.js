@@ -10,10 +10,6 @@ const { Select } = require("enquirer");
 
 const package = require("../../../package.json");
 
-// setup helpers
-const getEndpoints = require("../../getEndpoints");
-const CustomStore = require("../../customStore");
-
 // interactive actions
 const SetupApiKey = require("./Actions/SetupApiKey");
 const RequestSandboxFunds = require("./Actions/RequestSandboxFunds");
@@ -30,12 +26,6 @@ class DoneError extends Error {
 module.exports = async bunqCLI => {
     clearConsole();
     writeLine(chalk.blue(`bunq-cli v${package.version} - interactive mode`));
-
-    bunqCLI.storage = CustomStore(bunqCLI.saveLocation);
-    bunqCLI.bunqJSClient = new BunqJSClient(bunqCLI.storage);
-
-    // gather a list of endpoints the user can choose from
-    bunqCLI.endpoints = getEndpoints(bunqCLI.bunqJSClient);
 
     // do an initial run
     await SetupApiKey(bunqCLI, true);
@@ -56,7 +46,6 @@ const inputCycle = async bunqCLI => {
         writeLine(`Outputting API data in ${chalk.cyan(bunqCLI.outputLocation)}`);
     }
     writeLine(`bunqJSClient status: ${readyStatusText}`);
-
     writeLine(""); // end bunq-cli
 
     if (isReady) {
@@ -71,11 +60,9 @@ const inputCycle = async bunqCLI => {
         writeLine(`Monetary accounts: ${bunqCLI.monetaryAccounts.length}`);
         writeLine(`Total account balance: ${formatMoney(totalAccountBalance)}`);
     }
-
     writeLine(""); // end api info
 
     const choices = [];
-
     if (isReady) {
         choices.push({ message: "Use an API endpoint", value: "call-endpoint" });
         if (isSandbox) {

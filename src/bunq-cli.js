@@ -2,12 +2,18 @@ const os = require("os");
 const fs = require("fs");
 const path = require("path");
 const argv = require("yargs").argv;
+const BunqJSClient = require("@bunq-community/bunq-js-client").default;
+
+// setup helpers
+const getEndpoints = require("./getEndpoints");
+const CustomStore = require("./customStore");
+const FileOutput = require("./OutputHandlers/FileOutput");
 
 const { normalizePath } = require("./Utils");
 
+// command modes
 const InteractiveMode = require("./Modes/Interactive/interactive.js");
 const CLIMode = require("./Modes/CLI/cli.js");
-const FileOutput = require("./OutputHandlers/FileOutput");
 
 module.exports = async () => {
     const bunqCLI = {
@@ -57,8 +63,14 @@ module.exports = async () => {
         }
 
         // setup a file handler
-        bunqCLI.outputHandler = FileOutput(bunqCLI.outputHandler);
+        bunqCLI.outputHandler = FileOutput(bunqCLI.outputLocation);
     }
+
+    bunqCLI.storage = CustomStore(bunqCLI.saveLocation);
+    bunqCLI.bunqJSClient = new BunqJSClient(bunqCLI.storage);
+
+    // gather a list of endpoints the user can choose from
+    bunqCLI.endpoints = getEndpoints(bunqCLI);
 
     if (!argv.cli) {
         return InteractiveMode(bunqCLI);

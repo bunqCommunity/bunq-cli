@@ -2,7 +2,7 @@
 
 Work in progress
 
-## installation
+## Installation
 Clone and run `yarn` or`npm install`
 
 ## Usage
