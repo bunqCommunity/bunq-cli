@@ -35,4 +35,4 @@ $ bunq-cli --save
 
 ## Screenshot
 
-![Example screenshot](https://i.imgur.com/JrBIKa9.png)
+![Example usage gif](./assets/bunq-cli.gif)
