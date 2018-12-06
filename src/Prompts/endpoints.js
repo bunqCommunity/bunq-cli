@@ -10,7 +10,7 @@ module.exports = async endpoints => {
 
             const methodInputs = methodInfo.inputs || [];
             const methodText = methodInputs.length > 0 ? `[${methodInputs.join(", ")}]` : "";
-            const name = `${method}: ${endpointInfo.label}`;
+            const name = `${method} ${endpointInfo.label}`;
             const message = `${name} ${methodText}`;
 
             choices.push({
@@ -27,8 +27,14 @@ module.exports = async endpoints => {
 
     const prompt = new AutoComplete({
         message: "Which endpoint would you like to use? (Type to search)",
-        hint: "Use arrow-keys, <return> to submit",
-        limit: 7,
+        limit: 10,
+        format: () => {
+            if(prompt.focused){
+                return prompt.style(prompt.focused.name);
+            }
+            return prompt.style("No matches");
+        },
+        result: () => prompt.focused.value,
         choices: choices
     });
 
