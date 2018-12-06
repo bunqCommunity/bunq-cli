@@ -39,6 +39,16 @@ Utils.displayQr = (text, errorLevel = "L") => {
     qrcode.generate(text);
 };
 
+Utils.formatMoney = moneyNumber => {
+    return moneyNumber.toLocaleString("nl", {
+        currency: "EUR",
+        style: "currency",
+        currencyDisplay: "symbol",
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+};
+
 Utils.separatorChoiceOption = () => ({ value: chalk.grey("─────────────────────────"), role: "separator" });
 
 module.exports = Utils;

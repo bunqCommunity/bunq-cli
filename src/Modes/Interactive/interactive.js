@@ -16,7 +16,7 @@ const SetupApiKey = require("./Actions/SetupApiKey");
 const RequestSandboxFunds = require("./Actions/RequestSandboxFunds");
 const CallEndpoint = require("./Actions/CallEndpoint");
 
-const { write, writeLine, clearConsole, normalizePath, separatorChoiceOption } = require("../../Utils");
+const { write, writeLine, clearConsole, normalizePath, separatorChoiceOption, formatMoney } = require("../../Utils");
 
 class DoneError extends Error {
     constructor(props) {
@@ -77,8 +77,16 @@ const inputCycle = async interactiveData => {
     writeLine(`Storing data ${storageText}`);
     writeLine(`bunqJSClient status: ${readyStatusText}`);
     if (isReady) {
+        const totalAccountBalance = interactiveData.monetaryAccounts.reduce((total, account) => {
+            const accountType = Object.keys(account)[0];
+            const accountInfo = account[accountType];
+
+            return total + parseFloat(accountInfo.balance.value);
+        }, 0);
+
         writeLine(`User info: ${interactiveData.user.display_name}`);
         writeLine(`Monetary accounts: ${interactiveData.monetaryAccounts.length}`);
+        writeLine(`Total account balance: ${formatMoney(totalAccountBalance)}`);
     }
 
     // end info section with newline
