@@ -1,3 +1,4 @@
+const os = require("os");
 const path = require("path");
 const chalk = require("chalk");
 const crypto = require("crypto");
@@ -26,6 +27,8 @@ Utils.clearConsole = () => process.stdout.write("\033c\033[3J");
 Utils.normalizePath = inputPath => {
     if (inputPath[0] === "/" || inputPath[1] === ":") {
         // likely an absolute path
+    } else if (inputPath[0] === "~") {
+        inputPath = path.join(os.homedir(), inputPath.substr(1, inputPath.length));
     } else {
         inputPath = path.join(process.cwd(), inputPath);
     }

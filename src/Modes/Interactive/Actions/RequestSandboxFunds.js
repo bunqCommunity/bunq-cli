@@ -8,8 +8,6 @@ const { write, writeLine, clearConsole } = require("../../../Utils");
 module.exports = async interactiveData => {
     writeLine(chalk.blue(`Requesting sandbox funds`));
 
-    // writeLine(chalk.yellow(`Not implemented yet!`));
-
     const accountId = await monetaryAccountIdPrompt(interactiveData.monetaryAccounts);
     if (!accountId) return;
 
@@ -36,5 +34,5 @@ module.exports = async interactiveData => {
     );
     writeLine(chalk.green(`Updated monetary accounts!`));
 
-    return await awaiting.delay(1000);
+    return await awaiting.delay(500);
 };

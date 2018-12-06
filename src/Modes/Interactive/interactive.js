@@ -1,5 +1,8 @@
+const os = require("os");
+const fs = require("fs");
 const path = require("path");
 const chalk = require("chalk");
+const awaiting = require("awaiting");
 const BunqJSClient = require("@bunq-community/bunq-js-client").default;
 const argv = require("yargs").argv;
 
@@ -47,14 +50,28 @@ module.exports = async () => {
     if (argv.save) {
         // custom or default value if defined
         interactiveData.saveLocation =
-            argv.save !== true ? normalizePath(argv.save) : path.join(process.cwd(), "bunq-cli-storage.json");
+            argv.save !== true ? normalizePath(argv.save) : path.join(os.homedir(), "bunq-cli.json");
         interactiveData.saveData = true;
     }
-    if (argv.output) {
+
+    if (argv.output || argv.output === "file") {
+        const outputLocation = argv.outputLocation || false;
+
         // custom or default value if defined
         interactiveData.outputLocation =
-            argv.output !== true ? normalizePath(argv.output) : path.join(process.cwd(), "bunq-cli-files");
+            outputLocation === true || outputLocation === false
+                ? path.join(os.homedir(), "bunq-cli-api-data")
+                : normalizePath(outputLocation);
         interactiveData.outputData = true;
+
+        try {
+            const directoryExists = fs.existsSync(interactiveData.outputLocation);
+            if (!directoryExists) {
+                fs.mkdirSync(interactiveData.outputLocation);
+            }
+        } catch (ex) {
+            throw new Error(`Failed to find or create the given output folder at: ${interactiveData.outputLocation}`);
+        }
     }
 
     interactiveData.storage = CustomStore(interactiveData.saveLocation);
@@ -62,6 +79,9 @@ module.exports = async () => {
 
     // gather a list of endpoints the user can choose from
     interactiveData.endpoints = getEndpoints(interactiveData.bunqJSClient);
+
+    // do an initial run
+    await SetupApiKey(interactiveData, true);
 
     return nextCycle(interactiveData);
 };
@@ -74,7 +94,10 @@ const inputCycle = async interactiveData => {
     const readyStatusText = isReady ? chalk.green("ready") : chalk.yellow("Not ready");
 
     writeLine("");
-    writeLine(`Storing data ${storageText}`);
+    writeLine(`Storing bunqJSClient data ${storageText}`);
+    if (interactiveData.outputData) {
+        writeLine(`Outputting API data in ${chalk.cyan(interactiveData.outputLocation)}`);
+    }
     writeLine(`bunqJSClient status: ${readyStatusText}`);
     if (isReady) {
         const totalAccountBalance = interactiveData.monetaryAccounts.reduce((total, account) => {

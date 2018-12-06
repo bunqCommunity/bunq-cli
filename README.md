@@ -14,11 +14,14 @@ $ ./index.js --save ./custom-storage-location.json
 
 ## Options
 
-| Option   | Type       | Default | Info   |
+| Option   | Input Type       | Default | Info   |
 | ------- | -------- | -----|------ |
-| --save   | boolean    | false | Storage location for the bunqJSClient data, enabling this will significantly speed up future calls. If defined with no input, it'll fallback to `${workingDirectory}/bunq-cli-storage.json` |
-| --out    | `console`, `file`, `true`   | false | How to output the API data  |
-| --cli    | boolean        | false |A silent alternative for CLI usage - not yet implemented |
+| --save   | `string`    | false | Storage location for the bunqJSClient data, enabling this will significantly speed up future calls. Empty input will use `$HOME/bunq-cli.json` |
+| --output    | `file`   | false | How to output the API data, empty input will use `file`  |
+| --output-location    | `string`   | false | If `output-mode` is file, decide where the files are stored. Has to be a directory which defaults to `$HOME/bunq-cli-api-data`  |
+
+
+<!--| --cli    | boolean        | false |A silent alternative for CLI usage - not yet implemented | -->
 
 ## Screenshot
 
