@@ -19,7 +19,7 @@ Utils.write = input => {
     process.stdout.cursorTo(0);
     process.stdout.write(input);
 };
-Utils.clearConsole = () => console.log("\033[2J");
+Utils.clearConsole = () => process.stdout.write('\033c\033[3J');
 
 Utils.normalizePath = inputPath => {
     if (inputPath[0] === "/" || inputPath[1] === ":") {
