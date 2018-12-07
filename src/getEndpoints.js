@@ -1,6 +1,6 @@
 const awaiting = require("awaiting");
-const customInputIdPrompt = require("./Prompts/custom_input_id");
-const monetaryAccountIdPrompt = require("./Prompts/monetary_account_id");
+const customInputIdPrompt = require("./Modes/Interactive/Prompts/custom_input_id");
+const monetaryAccountIdPrompt = require("./Modes/Interactive/Prompts/select_monetary_account_id");
 
 class Endpoint {
     constructor(bunqCLI, label, handler, inputs) {

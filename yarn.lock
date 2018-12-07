@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@bunq-community/bunq-js-client@^0.35.2":
-  version "0.35.2"
-  resolved "https://registry.yarnpkg.com/@bunq-community/bunq-js-client/-/bunq-js-client-0.35.2.tgz#4b6ecc0e490793562382a63006beec844fe454fb"
-  integrity sha512-Mx+O7FLEjxfFDP5nP3O9fNoWjmKuZnZSQAIqQICsNxclBoDuypZjcDB0PoIeUVvtVFc+XBJgkEJ1yo54eJzhKA==
+"@bunq-community/bunq-js-client@^0.35.3":
+  version "0.35.3"
+  resolved "https://registry.yarnpkg.com/@bunq-community/bunq-js-client/-/bunq-js-client-0.35.3.tgz#1e2f033a3972bee77e3cec9ad3015bb7fa72cf4e"
+  integrity sha512-2Z4+7ExHws0K6IwN1+2iUYwEGsTGyh1pKC/5wxLB0bGQGpvyRT2mdKHMHTOP/6kHT6tfpylyKFYCDoyX4RPqtw==
   dependencies:
     awaiting "^3.0.0"
     axios "^0.16.2"

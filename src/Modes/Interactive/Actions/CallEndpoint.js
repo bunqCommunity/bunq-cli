@@ -1,6 +1,6 @@
 const chalk = require("chalk");
 
-const endpointsPrompt = require("../../../Prompts/endpoints");
+const selectEndpointPrompt = require("../Prompts/select_endpoint");
 
 const { write, writeLine, startTime, endTimeFormatted } = require("../../../Utils");
 
@@ -8,7 +8,7 @@ module.exports = async bunqCLI => {
     writeLine(chalk.blue(`Calling an API endpoint`));
     writeLine("");
 
-    const selectedEndpoint = await endpointsPrompt(bunqCLI.endpoints);
+    const selectedEndpoint = await selectEndpointPrompt(bunqCLI.endpoints);
 
     // preapre the inputs
     await selectedEndpoint.prepare();

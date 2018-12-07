@@ -5,11 +5,11 @@ const package = require("../../../package.json");
 
 // interactive actions
 const SetupApiKey = require("./Actions/SetupApiKey");
+const CreateMonetaryAccount = require("./Actions/CreateMonetaryAccount");
 const RequestSandboxFunds = require("./Actions/RequestSandboxFunds");
 const CallEndpoint = require("./Actions/CallEndpoint");
 
 const { writeLine, clearConsole, separatorChoiceOption, formatMoney } = require("../../Utils");
-
 const { DoneError } = require("../../Errors");
 
 module.exports = async bunqCLI => {
@@ -54,6 +54,7 @@ const inputCycle = async bunqCLI => {
     const choices = [];
     if (isReady) {
         choices.push({ message: "Use an API endpoint", value: "call-endpoint" });
+        choices.push({ message: "Create a new monetary account", value: "create-monetary-account" });
         if (isSandbox) {
             choices.push({ message: "Add funds to sandbox account", value: "request-sandbox-funds" });
         }
@@ -75,6 +76,9 @@ const inputCycle = async bunqCLI => {
             break;
         case "request-sandbox-funds":
             return RequestSandboxFunds(bunqCLI);
+            break;
+        case "create-monetary-account":
+            return CreateMonetaryAccount(bunqCLI);
             break;
         case "setup-api-key":
             return SetupApiKey(bunqCLI);

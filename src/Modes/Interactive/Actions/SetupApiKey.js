@@ -1,10 +1,10 @@
 const chalk = require("chalk");
 
-const useExistingApiKeyPrompt = require("../../../Prompts/use_existing_api_key");
-const apiKeyPrompt = require("../../../Prompts/api_key");
-const environmentPrompt = require("../../../Prompts/environment_prompt");
-const deviceNamePrompt = require("../../../Prompts/device_name");
-const encryptionKeyPrompt = require("../../../Prompts/encryption_key");
+const useExistingApiKeyPrompt = require("../Prompts/api_key_use_existing");
+const apiKeyPrompt = require("../Prompts/api_key");
+const environmentPrompt = require("../Prompts/api_environment");
+const deviceNamePrompt = require("../Prompts/api_device_name");
+const encryptionKeyPrompt = require("../Prompts/api_encryption_key");
 
 const { write, writeLine, startTime, endTimeFormatted } = require("../../../Utils");
 
@@ -70,7 +70,13 @@ module.exports = async (bunqCLI, skipExistingQuestion = false) => {
 
         write(chalk.yellow("Setting up the bunqJSClient [0/4] -> running client"));
 
-        await bunqJSClient.run(API_KEY, [], ENVIRONMENT, ENCRYPTION_KEY);
+        // enable wildcard in sandbox mode
+        const PERMITTED_IPS = [];
+        if (ENVIRONMENT === "SANDBOX") {
+            PERMITTED_IPS.push("*");
+        }
+
+        await bunqJSClient.run(API_KEY, PERMITTED_IPS, ENVIRONMENT, ENCRYPTION_KEY);
         bunqJSClient.setKeepAlive(false);
         write(chalk.yellow("Setting up the bunqJSClient [1/4] -> installation"));
 
@@ -83,21 +89,8 @@ module.exports = async (bunqCLI, skipExistingQuestion = false) => {
         await bunqJSClient.registerSession();
         writeLine(chalk.green("Finished setting up the bunqJSClient"));
 
-        write(chalk.yellow("Fetching users list ..."));
-        const userStartTime = startTime();
-        const users = await bunqJSClient.getUsers(true);
-        bunqCLI.userType = Object.keys(users)[0];
-        bunqCLI.user = users[bunqCLI.userType];
-        writeLine(chalk.green(`Fetched a ${bunqCLI.userType} account (${endTimeFormatted(userStartTime)})`));
-
-        write(chalk.yellow("Fetching monetary accounts ..."));
-        const accountStartTime = startTime();
-        bunqCLI.monetaryAccounts = await bunqJSClient.api.monetaryAccount.list(bunqCLI.user.id);
-        writeLine(
-            chalk.green(
-                `Fetched ${bunqCLI.monetaryAccounts.length} monetary accounts (${endTimeFormatted(accountStartTime)})\n`
-            )
-        );
+        await bunqCLI.getUser(true);
+        await bunqCLI.getMonetaryAccounts(true);
 
         writeLine("\n" + chalk.cyan("Finished setting up bunqJSClient."));
     }

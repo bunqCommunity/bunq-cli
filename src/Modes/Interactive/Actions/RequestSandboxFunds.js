@@ -1,7 +1,7 @@
 const chalk = require("chalk");
 const awaiting = require("awaiting");
 
-const monetaryAccountIdPrompt = require("../../../Prompts/monetary_account_id");
+const monetaryAccountIdPrompt = require("../Prompts/select_monetary_account_id");
 
 const { write, writeLine, startTime, endTimeFormatted } = require("../../../Utils");
 
@@ -33,10 +33,7 @@ module.exports = async bunqCLI => {
     writeLine(chalk.green(`Requested money for account: '${accountId}' (${timePassedLabel1})`));
 
     // when completed, update the stored monetary accounts list
-    write(chalk.yellow(`Updating monetary account list ... `));
-    const startTime2 = startTime();
-    bunqCLI.monetaryAccounts = await bunqCLI.bunqJSClient.api.monetaryAccount.list(bunqCLI.user.id);
-    writeLine(chalk.green(`Updated monetary accounts (${endTimeFormatted(startTime2)})`));
+    await bunqCLI.getMonetaryAccounts(true);
 
-    return await awaiting.delay(500);
+    return await awaiting.delay(250);
 };

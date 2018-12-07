@@ -1,6 +1,8 @@
 const os = require("os");
 const fs = require("fs");
 const path = require("path");
+const chalk = require("chalk");
+const awaiting = require("awaiting");
 const BunqJSClient = require("@bunq-community/bunq-js-client").default;
 
 const defaultSavePath = path.join(os.homedir(), "bunq-cli.json");
@@ -19,7 +21,7 @@ const ConsoleOutput = require("./OutputHandlers/ConsoleOutput");
 const InteractiveMode = require("./Modes/Interactive/interactive.js");
 const CLIMode = require("./Modes/CLI/cli.js");
 
-const { normalizePath } = require("./Utils");
+const { normalizePath, write, writeLine, startTime, endTimeFormatted } = require("./Utils");
 const { BunqCLIError } = require("./Errors");
 
 module.exports = async () => {
@@ -59,7 +61,6 @@ module.exports = async () => {
     }
 
     if (!bunqCLI.interactive && !argv.output) {
-        console.log(" aargh");
         argv.output = "console";
     }
 
@@ -89,7 +90,6 @@ module.exports = async () => {
             // setup a file handler
             bunqCLI.outputHandler = FileOutput(bunqCLI.outputLocation, bunqCLI.interactive);
         }
-        console.log(argv.output);
         if (argv.output === "console" || argv.output === "c") {
             if (bunqCLI.interactive) {
                 // ignore console mode in interactive mode
@@ -108,15 +108,31 @@ module.exports = async () => {
     bunqCLI.endpoints = getEndpoints(bunqCLI);
 
     // Generic API requests
-    bunqCLI.getUser = async () => {
-        const users = await bunqCLI.bunqJSClient.getUsers(true);
+    bunqCLI.getUser = async (forceUpdate = false) => {
+        write(chalk.yellow("Fetching users list ..."));
+        const userStartTime = startTime();
+
+        const users = await bunqCLI.bunqJSClient.getUsers(forceUpdate);
         bunqCLI.userType = Object.keys(users)[0];
         bunqCLI.user = users[bunqCLI.userType];
 
+        writeLine(chalk.green(`Fetched a ${bunqCLI.userType} account (${endTimeFormatted(userStartTime)})`));
         return bunqCLI.user;
     };
-    bunqCLI.getMonetaryAccounts = async () => {
+
+    bunqCLI.getMonetaryAccounts = async (forceUpdate = false) => {
+        if (!forceUpdate && bunqCLI.monetaryAccounts) {
+            return bunqCLI.monetaryAccounts;
+        }
+
+        write(chalk.yellow(`Updating monetary account list ... `));
+        const startTime2 = startTime();
+
         bunqCLI.monetaryAccounts = await bunqCLI.bunqJSClient.api.monetaryAccount.list(bunqCLI.user.id);
+
+        writeLine(chalk.green(`Updated monetary accounts (${endTimeFormatted(startTime2)})`));
+
+        await awaiting.delay(200);
 
         return bunqCLI.monetaryAccounts;
     };

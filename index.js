@@ -9,7 +9,10 @@ bunqCLI()
         if (error instanceof BunqCLIError) {
             console.error(chalk.red("\n" + error.message));
         } else if (error.response && error.response.data) {
-            console.error("\nbunq API Error");
+            console.error(chalk.red("\nbunq API Error"));
+            console.error(`URL: ${error.response.config.url}`);
+            console.error(`Method: ${error.response.config.method}`);
+            console.error(`Data: ${error.response.config.data}`);
             console.error(error.response.data);
         } else {
             console.error(error);

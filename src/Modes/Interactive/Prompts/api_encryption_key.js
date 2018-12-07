@@ -1,5 +1,5 @@
 const { Select, Password } = require("enquirer");
-const { randomHex } = require("../Utils");
+const { randomHex } = require("../../../Utils");
 
 module.exports = async ENCRYPTION_KEY => {
     const prompt = new Select({
@@ -13,7 +13,7 @@ module.exports = async ENCRYPTION_KEY => {
     } else {
         const inputPrompt = new Password({
             message: "Enter a 16, 24 or 32 bit hex encoded encryption key",
-            initialValue: ENCRYPTION_KEY ? ENCRYPTION_KEY : ""
+            initial: ENCRYPTION_KEY ? ENCRYPTION_KEY : ""
         });
 
         return inputPrompt.run();
