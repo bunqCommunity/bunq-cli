@@ -1,14 +1,14 @@
 # bunq-cli
 An unofficial and open source CLI tool to quickly test API requests with the bunq API.
 
-Either use the test API requests interactively or use it directly in other command line tools and cronjobs.
+Either test API requests interactively or use it directly in other command line tools and cronjobs.
 
 ![Example usage gif](./assets/bunq-cli.gif)
 
 ## Features
 
  - Create and add funds to sandbox accounts within seconds
- - Send 
+ - Send API requests and output to console or files as JSON
 
 ## Installation
 Clone and run `yarn` or`npm install`
