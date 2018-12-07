@@ -1,7 +1,8 @@
-const chalk = require("chalk");
 const UserCommand = require("./Commands/User");
 const EventsCommand = require("./Commands/Events");
 const AccountsCommand = require("./Commands/Accounts");
+
+const { BunqCLIError } = require("../../Errors");
 
 module.exports = async bunqCLI => {
     const argv = bunqCLI.argv;
@@ -47,26 +48,6 @@ module.exports = async bunqCLI => {
     await bunqJSClient.registerDevice(DEVICE_NAME);
     await bunqJSClient.registerSession();
 
-    bunqCLI.getUser = async () => {
-        const users = await bunqJSClient.getUsers(true);
-        bunqCLI.userType = Object.keys(users)[0];
-        bunqCLI.user = users[bunqCLI.userType];
-    };
-    bunqCLI.getMonetaryAccounts = async () => {
-        bunqCLI.monetaryAccounts = await bunqJSClient.api.monetaryAccount.list(bunqCLI.user.id);
-    };
-
-    bunqCLI.parseRequestOptions = () => {
-        const requestOptions = {
-            count: 200
-        };
-        if (argv.count) requestOptions.count = argv.count;
-        if (argv.older_id) requestOptions.older_id = argv.older_id;
-        if (argv.newer_id) requestOptions.newer_id = argv.newer_id;
-
-        return requestOptions;
-    };
-
     if (argv.user) {
         return UserCommand(bunqCLI);
     }
@@ -80,11 +61,8 @@ module.exports = async bunqCLI => {
     }
 
     if (argv.endpoint) {
-        console.log(chalk.red("Not implemented yet"));
-        return;
+        throw new BunqCLIError("Not implemented yet");
     }
 
-    // exclude all unused/excluded arguments for debug purposes
-    // const { save, cli, $0, _, output, outputLocation, ...otherArguments } = argv;
-    // console.log(otherArguments);
+    throw new BunqCLIError("No command given");
 };

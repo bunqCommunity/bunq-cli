@@ -13,7 +13,7 @@ module.exports = bunqCLI => {
             case "JSON":
             default:
                 if (bunqCLI.argv.pretty) {
-                    let prettySpacer = "\t";
+                    let prettySpacer = "  ";
                     if (bunqCLI.argv.pretty !== true) {
                         prettySpacer = bunqCLI.argv.pretty;
                     }

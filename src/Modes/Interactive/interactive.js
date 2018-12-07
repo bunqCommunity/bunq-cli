@@ -8,19 +8,13 @@ const SetupApiKey = require("./Actions/SetupApiKey");
 const RequestSandboxFunds = require("./Actions/RequestSandboxFunds");
 const CallEndpoint = require("./Actions/CallEndpoint");
 
-const { write, writeLine, clearConsole, normalizePath, separatorChoiceOption, formatMoney } = require("../../Utils");
+const { writeLine, clearConsole, separatorChoiceOption, formatMoney } = require("../../Utils");
 
-class DoneError extends Error {
-    constructor(props) {
-        super(props);
-    }
-}
+const { DoneError } = require("../../Errors");
 
 module.exports = async bunqCLI => {
     clearConsole();
     writeLine(chalk.blue(`bunq-cli v${package.version} - interactive mode`));
-
-    bunqCLI.interactive = true;
 
     // do an initial run
     await SetupApiKey(bunqCLI, true);

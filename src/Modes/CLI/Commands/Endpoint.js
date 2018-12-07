@@ -15,5 +15,4 @@ module.exports = async bunqCLI => {
     bunqCLI.apiData.events = await bunqJSClient.api.event.list(bunqCLI.user.id, requestOptions);
 
     bunqCLI.outputHandler(bunqCLI.apiData.events);
-    process.exit();
 };
