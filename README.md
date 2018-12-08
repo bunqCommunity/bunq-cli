@@ -25,6 +25,7 @@ bunq-cli
 ```
 
 ## Roadmap
+ - Add a password option to allow for production API key storage
  - Create sandbox accounts with `--sandbox-account`.
  - Support for both regular API key and OAuth logins through QR codes.
  - View current user, monetary accounts and other API data in interactive mode.
