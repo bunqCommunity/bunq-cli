@@ -25,9 +25,10 @@ bunq-cli
 ```
 
 ## Roadmap
- - Support for both regular API key and OAuth logins through QR codes
- - View current user, monetary accounts and other API data in interactive mode
- - Transfers between own accounts by ID and description
+ - Create sandbox accounts with `--sandbox-account`.
+ - Support for both regular API key and OAuth logins through QR codes.
+ - View current user, monetary accounts and other API data in interactive mode.
+ - Transfers between own accounts by ID and description for CLI mode and through the UI in interactive mode.
     - `bunq-cli --cli --transfer --transfer-from Shopping --transfer-to Savings --amount 10`
     - `bunq-cli --cli --transfer --transfer-from-id 1234 --transfer-to-id 4321 --amount='12.36' --description='Less shopping'`
 
