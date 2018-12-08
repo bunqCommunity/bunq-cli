@@ -50,6 +50,8 @@ module.exports = async bunqCLI => {
         apiResult = await bunqJSClient.api[argv.endpoint][lowerCaseMethod](bunqCLI.user.id, accountId, eventId, params);
     } else if (accountId) {
         apiResult = await bunqJSClient.api[argv.endpoint][lowerCaseMethod](bunqCLI.user.id, accountId, params);
+    } else if (eventId) {
+        apiResult = await bunqJSClient.api[argv.endpoint][lowerCaseMethod](bunqCLI.user.id, eventId, params);
     } else {
         apiResult = await bunqJSClient.api[argv.endpoint][lowerCaseMethod](bunqCLI.user.id, params);
     }
