@@ -6,6 +6,10 @@
     "bin": {
         "bunq-cli": "bin/cli.js"
     },
+    "files": [
+        "bin/**/*",
+        "src/**/*"
+    ],
     "scripts": {
         "prettier": "./node_modules/.bin/prettier --tab-width 4 --print-width 120 --write \"+(tests|bin|src)/**/**.+(js|ts)\""
     },
