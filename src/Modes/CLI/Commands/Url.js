@@ -12,7 +12,8 @@ module.exports = async bunqCLI => {
     await bunqCLI.getUser();
     await bunqCLI.getMonetaryAccounts();
 
-    const method = MethodParser(argv.method, bunqCLI);
+    const parsedMethod = MethodParser(argv.method, bunqCLI);
+    const method = parsedMethod === "LIST" ? "GET" : parsedMethod;
     const data = DataParser(argv.data, bunqCLI);
     const url = UrlParser(argv.url, bunqCLI);
     const params = FilterParser(bunqCLI);

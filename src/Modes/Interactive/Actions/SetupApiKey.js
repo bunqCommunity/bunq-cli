@@ -6,7 +6,7 @@ const environmentPrompt = require("../Prompts/api_environment");
 const deviceNamePrompt = require("../Prompts/api_device_name");
 const encryptionKeyPrompt = require("../Prompts/api_encryption_key");
 
-const { write, writeLine, startTime, endTimeFormatted } = require("../../../Utils");
+const { write, writeLine } = require("../../../Utils");
 
 module.exports = async (bunqCLI, skipExistingQuestion = false) => {
     writeLine(chalk.blue(`Setting up bunqJSClient`));
@@ -15,16 +15,17 @@ module.exports = async (bunqCLI, skipExistingQuestion = false) => {
     const bunqJSClient = bunqCLI.bunqJSClient;
     const saveData = bunqCLI.saveData;
     const storage = bunqCLI.storage;
+    const argv = bunqCLI.argv;
 
     const storedApiKey = saveData === false ? false : storage.get("API_KEY");
     const storedEnvironment = saveData === false ? false : storage.get("ENVIRONMENT");
     const storedEncryptionKey = saveData === false ? false : storage.get("ENCRYPTION_KEY");
     const storedDeviceName = saveData === false ? false : storage.get("DEVICE_NAME");
 
-    let API_KEY = process.env.API_KEY || storedApiKey;
-    let ENVIRONMENT = process.env.ENVIRONMENT || storedEnvironment;
-    let ENCRYPTION_KEY = process.env.ENCRYPTION_KEY || storedEncryptionKey;
-    let DEVICE_NAME = process.env.DEVICE_NAME || storedDeviceName;
+    let API_KEY = argv.apiKey || storedApiKey;
+    let ENVIRONMENT = argv.environment || storedEnvironment;
+    let ENCRYPTION_KEY = argv.encryptionKey || storedEncryptionKey;
+    let DEVICE_NAME = argv.deviceName || storedDeviceName;
 
     if (!skipExistingQuestion) {
         let newKeyWasSet = false;

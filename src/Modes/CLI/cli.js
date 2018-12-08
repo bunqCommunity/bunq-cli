@@ -2,6 +2,7 @@ const UrlCommand = require("./Commands/Url");
 const UserCommand = require("./Commands/User");
 const EventsCommand = require("./Commands/Events");
 const AccountsCommand = require("./Commands/Accounts");
+const EndpointCommand = require("./Commands/Endpoint");
 
 const { BunqCLIError } = require("../../Errors");
 
@@ -62,12 +63,11 @@ module.exports = async bunqCLI => {
     }
 
     if (argv.endpoint) {
-        throw new BunqCLIError("Not implemented yet");
+        return EndpointCommand(bunqCLI);
     }
 
     if (argv.url) {
         return UrlCommand(bunqCLI);
-        throw new BunqCLIError("Not implemented yet");
     }
 
     throw new BunqCLIError("No command given");

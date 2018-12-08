@@ -1,5 +1,9 @@
+#!/usr/bin/env node
+
 require("dotenv").config();
+
 const chalk = require("chalk");
+
 const bunqCLI = require("./src/bunq-cli");
 const { BunqCLIError } = require("./src/Errors");
 

@@ -15,11 +15,9 @@ module.exports = (methodInput, bunqCLI) => {
         case "DELETE":
         case "PUT":
         case "POST":
-            return methodInput;
         case "LIST":
         case "GET":
-            // LIST requests are simply GET requests
-            return "GET";
+            return methodInput;
     }
 
     throw new BunqCLIError(`Invalid --method given, '${methodInput}' not recognized`);

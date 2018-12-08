@@ -3,22 +3,20 @@ module.exports = ({ defaultSavePath, defaultOutputLocationPath }) => {
         .alias({
             save: "s",
             cli: "c",
+            eventId: "event",
+            account: "older-id",
             olderId: "older-id",
             newerId: "newer-id"
         })
         .env("BUNQ_CLI")
         .boolean(["user", "accounts", "events"])
-        .string([])
+        .string(["endpoint", "url"])
         .normalize(["outputLocation"])
 
         .group(["cli", "save", "output", "outputLocation"], "General")
         // .group([], "Interactive mode options")
         .group(["user", "accounts", "events", "endpoint", "url"], "CLI mode commands - only use 1 at a time")
-        .group(["method", "olderId", "newerId", "count", "data"], "CLI options")
-
-        .coerce({
-            data: JSON.parse
-        })
+        .group(["method", "olderId", "newerId", "count", "data", "account", "accountId", "eventId"], "CLI options")
 
         .default({
             save: false,
@@ -30,7 +28,8 @@ module.exports = ({ defaultSavePath, defaultOutputLocationPath }) => {
         })
 
         .choices({
-            output: ["file", "f", "console", "c", false]
+            output: ["file", "f", "console", "c", false],
+            method: ["LIST", "GET", "POST", "PUT", "DELETE"]
         })
 
         .describe({
@@ -39,16 +38,22 @@ module.exports = ({ defaultSavePath, defaultOutputLocationPath }) => {
             output:
                 "Output type for API data, ignored if not defined. Default in interactive mode = false, default in CLI mode = console",
             outputLocation: "Directory location for API output, ignored if 'output' not defined",
+
             user: "fetches the User object",
             accounts: "fetches all monetary accounts",
             events: "fetches the events for the user",
             endpoint: "a specific endpoint you want to call",
             url: "send a request directly for a given url, combine with --data, --method and the LIST options",
+
             method: "HTTP method, defaults to LIST",
             count: "Amount of items to returns between 1 and 200",
             olderId: "Only return events newer than this event ID",
             newerId: "Only return events older than this event ID",
-            data: "JSON data as a string for POST/PUT requests"
+            data: "JSON data as a string for POST/PUT requests",
+
+            account: "Account description of the account to use in API calls",
+            accountId: "Account ID of the account to use in API calls",
+            eventId: "Event ID of the even to do a API call for"
         })
 
         .example("bunq-cli --save", "The default interactive mode which saves bunqJSClient data for fast re-runs")

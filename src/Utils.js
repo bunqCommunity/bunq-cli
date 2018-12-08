@@ -31,7 +31,7 @@ Utils.normalizePath = inputPath => {
     } else if (inputPath[0] === "~") {
         inputPath = path.join(os.homedir(), inputPath.substr(1, inputPath.length));
     } else {
-        inputPath = path.join(os.homedir(), inputPath);
+        inputPath = path.join(process.cwd(), inputPath);
     }
 
     return inputPath;

@@ -1,18 +1,64 @@
+const { BunqCLIError } = require("../../../Errors");
+
+const FilterParser = require("../../../InputHandlers/FilterParser");
+const MethodParser = require("../../../InputHandlers/MethodParser");
+
 module.exports = async bunqCLI => {
-    if (!bunqCLI.user) await bunqCLI.getUser();
-    if (!bunqCLI.monetaryAccounts) await bunqCLI.getMonetaryAccounts();
+    const bunqJSClient = bunqCLI.bunqJSClient;
+    const argv = bunqCLI.argv;
 
-    const requestOptions = {
-        count: 200
-    };
-    if (argv.count) requestOptions.count = argv.count;
-    if (argv.older_id) requestOptions.older_id = argv.older_id;
-    if (argv.newer_id) requestOptions.newer_id = argv.newer_id;
+    // always get the user info
+    await bunqCLI.getUser();
 
-    if (typeof bunqJSClient.api[argv.endpoint] === "undefined")
-        throw new Error("Endpoint not found or unsupported");
+    const params = FilterParser(bunqCLI);
+    const method = MethodParser(argv.method, bunqCLI);
+    const lowerCaseMethod = method.toLowerCase();
+    let accountId = false;
+    const eventId = argv.eventId || false;
 
-    bunqCLI.apiData.events = await bunqJSClient.api.event.list(bunqCLI.user.id, requestOptions);
+    if (argv.account || argv.accountId) {
+        // get the latest account list
+        await bunqCLI.getMonetaryAccounts();
 
-    bunqCLI.outputHandler(bunqCLI.apiData.events);
+        bunqCLI.monetaryAccounts.forEach(account => {
+            const accountType = Object.keys(account)[0];
+            if (argv.accountId && account[accountType].id === parseFloat(argv.accountId)) {
+                accountId = account[accountType].id;
+            }
+            if (argv.account && account[accountType].description === argv.account) {
+                accountId = account[accountType].id;
+            }
+            return false;
+        });
+        if (!accountId) {
+            throw new BunqCLIError(`No account found for the given account description/ID`);
+        }
+    }
+
+    if (typeof bunqJSClient.api[argv.endpoint] === "undefined") {
+        throw new BunqCLIError(`Endpoint (${argv.endpoint}) not found or unsupported`);
+    }
+    if (typeof bunqJSClient.api[argv.endpoint][lowerCaseMethod] === "undefined") {
+        throw new BunqCLIError(
+            `The method (${lowerCaseMethod}) for this endpoint (${argv.endpoint}) not found or unsupported`
+        );
+    }
+
+    // call the actual endpoint
+    let apiResult;
+    if (accountId && eventId) {
+        apiResult = await bunqJSClient.api[argv.endpoint][lowerCaseMethod](bunqCLI.user.id, accountId, eventId, params);
+    } else if (accountId) {
+        apiResult = await bunqJSClient.api[argv.endpoint][lowerCaseMethod](bunqCLI.user.id, accountId, params);
+    } else {
+        apiResult = await bunqJSClient.api[argv.endpoint][lowerCaseMethod](bunqCLI.user.id, params);
+    }
+
+    // store the data in memory
+    if (!bunqCLI.apiData[argv.endpoint]) bunqCLI.apiData[argv.endpoint] = {};
+    if (!bunqCLI.apiData[argv.endpoint][method]) bunqCLI.apiData[argv.endpoint][method] = {};
+    bunqCLI.apiData[argv.endpoint][method] = apiResult;
+
+    // output the results
+    bunqCLI.outputHandler(apiResult);
 };
