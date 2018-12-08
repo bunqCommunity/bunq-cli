@@ -13,6 +13,13 @@ Either test API requests interactively or use it directly in other command line 
  - Create and add funds to sandbox accounts within seconds
  - Send API requests and output to console or files as JSON
 
+## Roadmap
+
+ - View current user, monetary accounts and other API data in interactive mode
+ - Transfers between own accounts by ID and description
+    - `bunq-cli --cli --transfer --transfer-from Shopping --transfer-to Savings --amount 10`
+    - `bunq-cli --cli --transfer --transfer-from-id 1234 --transfer-to-id 4321 --amount='12.36' --description='Less shopping'`
+
 ## Installation
 Clone and run `yarn` or`npm install`
 
