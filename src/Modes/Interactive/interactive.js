@@ -22,20 +22,14 @@ module.exports = async bunqCLI => {
     return nextCycle(bunqCLI);
 };
 
-const inputCycle = async bunqCLI => {
+const inputCycle = async (bunqCLI, firstRun = false) => {
     const isReady = !!bunqCLI.bunqJSClient.apiKey;
     const isSandbox = bunqCLI.bunqJSClient.Session.environment === "SANDBOX";
 
-    const storageText = bunqCLI.saveLocation ? `at ${chalk.cyan(bunqCLI.saveLocation)}` : "in memory";
-    const readyStatusText = isReady ? chalk.green("ready") : chalk.yellow("Not ready");
-
-    writeLine("");
-    writeLine(`Storing bunqJSClient data ${storageText}`);
-    if (bunqCLI.outputData) {
-        writeLine(`Outputting API data in ${chalk.cyan(bunqCLI.outputLocation)}`);
+    if (firstRun) {
+        writeLine("");
+        await infoOutput(bunqCLI);
     }
-    writeLine(`bunqJSClient status: ${readyStatusText}`);
-    writeLine(""); // end bunq-cli
 
     if (isReady) {
         const totalAccountBalance = bunqCLI.monetaryAccounts.reduce((total, account) => {
@@ -45,9 +39,11 @@ const inputCycle = async bunqCLI => {
             return total + parseFloat(accountInfo.balance.value);
         }, 0);
 
-        writeLine(`User info: ${bunqCLI.user.display_name}`);
-        writeLine(`Monetary accounts: ${bunqCLI.monetaryAccounts.length}`);
-        writeLine(`Total account balance: ${formatMoney(totalAccountBalance)}`);
+        writeLine(`User info: ${chalk.cyan(bunqCLI.user.display_name)}`);
+        writeLine(`Monetary accounts: ${chalk.cyan(bunqCLI.monetaryAccounts.length)}`);
+        writeLine(`Total account balance: ${chalk.cyan(formatMoney(totalAccountBalance))}`);
+    } else {
+        writeLine(`bunqJSClient status: ${chalk.yellow("Not ready!")}`);
     }
     writeLine(""); // end api info
 
@@ -61,6 +57,7 @@ const inputCycle = async bunqCLI => {
     }
     choices.push({ message: isReady ? "Modify API key" : "Setup an API key", value: "setup-api-key" });
     choices.push(separatorChoiceOption());
+    choices.push({ message: "Refresh", value: "refresh" });
     choices.push({ message: "Quit", value: "quit" });
 
     const result = await new Select({
@@ -83,6 +80,9 @@ const inputCycle = async bunqCLI => {
         case "setup-api-key":
             return SetupApiKey(bunqCLI);
             break;
+        case "refresh":
+            // do nothing and re-render
+            return;
         case "quit":
             // break out of loop
             throw new DoneError();
@@ -90,11 +90,21 @@ const inputCycle = async bunqCLI => {
     }
 };
 
+const infoOutput = async bunqCLI => {
+    const storageText = bunqCLI.saveLocation ? `at ${chalk.cyan(bunqCLI.saveLocation)}` : "in memory";
+
+    writeLine(`Storing bunqJSClient data ${storageText}`);
+    if (bunqCLI.outputData) {
+        writeLine(`Outputting API data in ${chalk.cyan(bunqCLI.outputLocation)}`);
+    }
+    writeLine(""); // end bunq-cli
+};
+
 // infinitly loops while waiting
-const nextCycle = async bunqCLI => {
+const nextCycle = async (bunqCLI, firstRun = false) => {
     try {
         // wait for this cycle to finished
-        await inputCycle(bunqCLI);
+        await inputCycle(bunqCLI, firstRun);
     } catch (ex) {
         if (ex instanceof DoneError) {
             writeLine(chalk.green("\nFinished"));

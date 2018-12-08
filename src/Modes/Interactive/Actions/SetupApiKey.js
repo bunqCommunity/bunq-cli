@@ -92,6 +92,6 @@ module.exports = async (bunqCLI, skipExistingQuestion = false) => {
         await bunqCLI.getUser(true);
         await bunqCLI.getMonetaryAccounts(true);
 
-        writeLine("\n" + chalk.cyan("Finished setting up bunqJSClient."));
+        writeLine("\n" + chalk.green("Finished setting up bunqJSClient.") + "\n");
     }
 };

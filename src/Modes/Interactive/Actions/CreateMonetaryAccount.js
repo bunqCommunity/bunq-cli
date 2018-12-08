@@ -8,7 +8,7 @@ const colorPickerPrommpt = require("../Prompts/color_picker");
 const { write, writeLine, startTime, endTimeFormatted } = require("../../../Utils");
 
 module.exports = async bunqCLI => {
-    writeLine(chalk.blue(`Creating a monetary account`));
+    writeLine(chalk.blue(`Creating a new monetary account`));
     writeLine("");
 
     const description = await genericStringPrompt("account description");
