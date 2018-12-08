@@ -1,3 +1,4 @@
+require("dotenv").config();
 const os = require("os");
 const fs = require("fs");
 const path = require("path");
@@ -23,7 +24,7 @@ const CLIMode = require("./Modes/CLI/cli.js");
 const { normalizePath, write, writeLine, startTime, endTimeFormatted } = require("./Utils");
 const { BunqCLIError } = require("./Errors");
 
-module.exports = async () => {
+const bunqCLI = async () => {
     const bunqCLI = {
         bunqJSClient: null,
 
@@ -163,3 +164,22 @@ module.exports = async () => {
         return CLIMode(bunqCLI);
     }
 };
+
+bunqCLI()
+    .then(() => process.exit())
+    .catch(error => {
+        if (error instanceof BunqCLIError) {
+            console.error(chalk.red("\n" + error.message));
+
+        } else if (error.response && error.response.data) {
+            console.error(chalk.red("\nbunq API Error"));
+            console.error(`URL: ${error.response.config.url}`);
+            console.error(`Method: ${error.response.config.method}`);
+            console.error(`Data: ${error.response.config.data}`);
+            console.error(error.response.data);
+
+        } else {
+            console.error(error);
+        }
+        process.exit(1);
+    });

@@ -1,5 +1,5 @@
 # bunq-cli
-[![NPM Downloads](https://img.shields.io/npm/dt/@bunq-community/bunq-cli.svg)](https://www.npmjs.com/package/@bunq-community/bunq-cli)
+[![NPM  Version](https://img.shields.io/npm/v/@bunq-community/bunq-cli.svg)](https://github.com/@bunq-community/bunq-cli) [![NPM Downloads](https://img.shields.io/npm/dt/@bunq-community/bunq-cli.svg)](https://www.npmjs.com/package/@bunq-community/bunq-cli)
 
 An unofficial and open source CLI tool to quickly test API requests with the bunq API.
 

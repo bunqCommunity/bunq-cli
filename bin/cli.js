@@ -1,3 +1,5 @@
 #!/usr/bin/env node
 
-require(__dirname + "/../index.js");
+const path = require("path");
+
+require(path.join(__dirname, "../src/bunq-cli"));
