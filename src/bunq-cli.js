@@ -2,7 +2,6 @@ const os = require("os");
 const fs = require("fs");
 const path = require("path");
 const chalk = require("chalk");
-const awaiting = require("awaiting");
 const BunqJSClient = require("@bunq-community/bunq-js-client").default;
 
 const defaultSavePath = path.join(os.homedir(), "bunq-cli.json");
@@ -109,14 +108,15 @@ module.exports = async () => {
 
     // Generic API requests
     bunqCLI.getUser = async (forceUpdate = false) => {
-        write(chalk.yellow("Fetching users list ..."));
+        if (bunqCLI.interactive) write(chalk.yellow("Fetching users list ..."));
         const userStartTime = startTime();
 
         const users = await bunqCLI.bunqJSClient.getUsers(forceUpdate);
         bunqCLI.userType = Object.keys(users)[0];
         bunqCLI.user = users[bunqCLI.userType];
 
-        writeLine(chalk.green(`Fetched a ${bunqCLI.userType} account (${endTimeFormatted(userStartTime)})`));
+        if (bunqCLI.interactive)
+            writeLine(chalk.green(`Fetched a ${bunqCLI.userType} account (${endTimeFormatted(userStartTime)})`));
         return bunqCLI.user;
     };
 
@@ -125,15 +125,23 @@ module.exports = async () => {
             return bunqCLI.monetaryAccounts;
         }
 
-        write(chalk.yellow(`Updating monetary account list ... `));
+        if (!bunqCLI.user) {
+            await bunqCLI.getUser();
+        }
+
+        if (bunqCLI.interactive) write(chalk.yellow(`Updating monetary account list ... `));
         const startTime2 = startTime();
 
-        bunqCLI.monetaryAccounts = await bunqCLI.bunqJSClient.api.monetaryAccount.list(bunqCLI.user.id);
+        // check API
+        const monetaryAccounts = await bunqCLI.bunqJSClient.api.monetaryAccount.list(bunqCLI.user.id);
 
-        writeLine(chalk.green(`Updated monetary accounts (${endTimeFormatted(startTime2)})`));
+        // filter out inactive accounts
+        bunqCLI.monetaryAccounts = monetaryAccounts.filter(account => {
+            const accountType = Object.keys(account)[0];
+            return account[accountType].status === "ACTIVE";
+        });
 
-        await awaiting.delay(200);
-
+        if (bunqCLI.interactive) writeLine(chalk.green(`Updated monetary accounts (${endTimeFormatted(startTime2)})`));
         return bunqCLI.monetaryAccounts;
     };
 

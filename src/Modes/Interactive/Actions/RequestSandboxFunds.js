@@ -31,9 +31,12 @@ module.exports = async bunqCLI => {
 
     const timePassedLabel1 = endTimeFormatted(startTime1);
     writeLine(chalk.green(`Requested money for account: '${accountId}' (${timePassedLabel1})`));
+    writeLine("");
 
     // when completed, update the stored monetary accounts list
     await bunqCLI.getMonetaryAccounts(true);
+
+    writeLine("");
 
     return await awaiting.delay(250);
 };

@@ -1,14 +1,15 @@
 module.exports = ({ defaultSavePath, defaultOutputLocationPath }) => {
     const arguments = require("yargs")
-        .alias({ save: "s" })
+        .alias({ save: "s", olderId: "older-id", newerId: "newer-id" })
         .env("BUNQ_CLI")
         .boolean(["user", "accounts", "events"])
         .string([])
+        .normalize(["outputLocation"])
 
         .group(["save", "output", "outputLocation"], "General")
         // .group([], "Interactive mode options")
-        .group(["user", "accounts", "events", "endpoint"], "CLI mode commands - only use 1 at a time")
-        .group(["method", "older-id", "newer-id", "count", "data"], "CLI options")
+        .group(["user", "accounts", "events", "endpoint", "url"], "CLI mode commands - only use 1 at a time")
+        .group(["method", "olderId", "newerId", "count", "data"], "CLI options")
 
         .coerce({
             data: JSON.parse
@@ -36,10 +37,11 @@ module.exports = ({ defaultSavePath, defaultOutputLocationPath }) => {
             accounts: "fetches all monetary accounts",
             events: "fetches the events for the user",
             endpoint: "a specific endpoint you want to call",
+            url: "send a request directly for a given url, combine with --data, --method and the LIST options",
             method: "HTTP method, defaults to LIST",
             count: "Amount of items to returns between 1 and 200",
-            "older-id": "Only return events newer than this event ID",
-            "newer-id": "Only return events older than this event ID",
+            olderId: "Only return events newer than this event ID",
+            newerId: "Only return events older than this event ID",
             data: "JSON data as a string for POST/PUT requests"
         })
 

@@ -87,11 +87,12 @@ module.exports = async (bunqCLI, skipExistingQuestion = false) => {
         write(chalk.yellow("Setting up the bunqJSClient [3/4] -> session registration"));
 
         await bunqJSClient.registerSession();
-        writeLine(chalk.green("Finished setting up the bunqJSClient"));
+        writeLine(chalk.green("Finished setting up bunqJSClient."));
+        writeLine("");
 
         await bunqCLI.getUser(true);
         await bunqCLI.getMonetaryAccounts(true);
 
-        writeLine("\n" + chalk.green("Finished setting up bunqJSClient.") + "\n");
+        writeLine("");
     }
 };
