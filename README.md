@@ -17,7 +17,7 @@ Either test API requests interactively or use it directly in other command line 
  - Send API requests and output to console or files as JSON
 
 ## Getting started
-Install globally as a command `yarn global add @bunq-community/bunq-cli` or `npmg install -g @bunq-community/bunq-cli`
+Install globally as a command `yarn global add @bunq-community/bunq-cli` or `npm install -g @bunq-community/bunq-cli`
 
 Standard interactive mode while storing your keys at the default location:
 ```bash
