@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import awaiting from "awaiting";
+import * as  awaiting from "awaiting";
 
 import monetaryAccountIdPrompt from "../Prompts/select_monetary_account_id";
 

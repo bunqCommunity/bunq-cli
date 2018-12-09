@@ -17,7 +17,7 @@ export default async endpoints => {
             choices.push({
                 message: message,
                 name: name,
-                value: methodInfo
+                value: `${endpoint}|${method}`
             });
         });
     });
@@ -28,16 +28,23 @@ export default async endpoints => {
 
     const prompt = new AutoComplete({
         message: "Which endpoint would you like to use? (Type to search)",
-        limit: 10,
         format: () => {
             if (prompt.focused) {
                 return prompt.style(prompt.focused.name);
             }
             return prompt.style("No matches");
         },
-        result: () => prompt.focused.value,
+        result: value => {
+            if (!prompt.focused) return value;
+            return prompt.focused.value;
+        },
         choices: choices
     });
 
-    return prompt.run();
+    const selectedEndpoint: string = await prompt.run();
+
+    // split the selected endpoint
+    const splitParts = selectedEndpoint.split("|");
+
+    return endpoints[splitParts[0]].methods[splitParts[1]];
 };

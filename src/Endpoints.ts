@@ -1,37 +1,33 @@
-import awaiting from "awaiting";
+import * as awaiting from "awaiting";
 import BunqCLI from "./BunqCLI";
 import customInputIdPrompt from "./Modes/Interactive/Prompts/custom_input_id";
 import monetaryAccountIdPrompt from "./Modes/Interactive/Prompts/select_monetary_account_id";
+import { capitalizeFirstLetter } from "./Utils";
 
 class Endpoint {
     private _bunqCLI: BunqCLI;
     private _label: string;
     private _handler: any;
     private _inputs: any[];
-    private _parsedInputs: any[];
+    private _parsedInputs: any[] = [];
 
     constructor(bunqCLI, label, handler, inputs) {
         this._bunqCLI = bunqCLI;
         this._label = label;
         this._handler = handler;
         this._inputs = inputs;
-        this._parsedInputs = [];
-
-        this.handle = this.handle.bind(this);
-        this.getInputs = this.getInputs.bind(this);
-        this.inputHandler = this.inputHandler.bind(this);
     }
 
-    get handler() {
+    public get handler() {
         return this._handler;
     }
-    get label() {
+    public get label() {
         return this._label;
     }
-    get inputs() {
+    public get inputs() {
         return this._inputs;
     }
-    get parsedInputs() {
+    public get parsedInputs() {
         return this._parsedInputs;
     }
 
@@ -40,7 +36,6 @@ class Endpoint {
      * @returns {Promise<void>}
      */
     public prepare = async () => {
-        console.log(this);
         this._parsedInputs = await this.getInputs();
     };
 
@@ -49,7 +44,7 @@ class Endpoint {
      * @returns {Promise<*>}
      */
     public handle = async () => {
-        return this._handler(...this.parsedInputs);
+        return this._handler(...this._parsedInputs);
     };
 
     /**
@@ -57,7 +52,7 @@ class Endpoint {
      * @returns {Promise<*>}
      */
     public getInputs = async () => {
-        return awaiting.map(this.inputs, 1, this.inputHandler);
+        return awaiting.map(this._inputs, 1, this.inputHandler);
     };
 
     /**
@@ -168,7 +163,7 @@ export default bunqCLI => {
     defaultEndpointList.forEach(defaultEndpoint => {
         if (!endpoints[defaultEndpoint]) {
             endpoints[defaultEndpoint] = {
-                label: defaultEndpoint,
+                label: capitalizeFirstLetter(defaultEndpoint),
                 methods: {}
             };
         }

@@ -30,9 +30,11 @@ export const write = input => {
 };
 
 export const clearConsole = () => {
-    // TODO check clear console behavior
-    // process.stdout.write("\x1Bc\x1Bc");
-    process.stdout.write('\x1B[2J\x1B[0f');
+    process.stdout.write("\x1B[2J\x1B[0f");
+};
+
+export const capitalizeFirstLetter = string => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
 export const normalizePath = inputPath => {
