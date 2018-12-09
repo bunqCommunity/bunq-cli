@@ -9,18 +9,20 @@ export default async (bunqCLI: BunqCLI) => {
     writeLine(chalk.blue(`View your monetary accounts`));
     writeLine("");
 
-    const spacerString = chalk.gray("".padEnd(60, "─"));
+    const spacerString = "".padEnd(60, "─");
+    const whiteSpacer = chalk.gray(spacerString);
+    const graySpacer = chalk.gray(spacerString);
 
-    const accountText = chalk.cyan("Account") + "";
-    const balanceText = chalk.gray(" Balance") + "";
-    const ibanText = chalk.gray(" IBAN") + "";
+    const accountText = chalk.blue("Account") + "";
+    const balanceText = chalk.blue("Balance") + "";
+    const ibanText = chalk.blue("  Alias") + "";
     const accountColumnText = accountText.padEnd(30, " ");
     const balanceColumnText = balanceText.padStart(20, " ");
     const ibanColumnText = ibanText.padEnd(15, " ");
 
     const headerTemplate = `${accountColumnText}${balanceColumnText}${ibanColumnText}`;
     writeLine(headerTemplate);
-    writeLine(spacerString);
+    writeLine(whiteSpacer);
 
     bunqCLI.monetaryAccounts.forEach((monetaryAccount: MonetaryAccount) => {
         const prettyBalance = formatMoney(monetaryAccount.balance.value);
@@ -43,7 +45,7 @@ export default async (bunqCLI: BunqCLI) => {
             writeLine(`${"".padEnd(2, " ")}${prettyAliasType.padEnd(30, " ")}${alias.value}`);
         });
 
-        writeLine(spacerString);
+        writeLine(graySpacer);
     });
     writeLine("");
 };
