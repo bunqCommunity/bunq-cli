@@ -3,16 +3,23 @@
     "version": "0.1.2",
     "license": "MIT",
     "main": "./index.js",
+    "types": "./dist/BunqCLI.d.ts",
     "bin": {
         "bunq-cli": "bin/cli.js"
     },
     "files": [
         "index.js",
+        "index.ts",
         "bin/**/*",
-        "src/**/*"
+        "dist/**/*"
     ],
     "scripts": {
-        "prettier": "./node_modules/.bin/prettier --tab-width 4 --print-width 120 --write \"+(tests|bin|src)/**/**.+(js|ts)\""
+        "prebuild": "rm -r dist/*",
+        "build": "tsc --listFiles --newline lf",
+        "build:dev": "tsc -w --newline lf",
+        "start": "ts-node ./index.ts",
+        "prettier": "./node_modules/.bin/prettier --tab-width 4 --print-width 120 --write \"+(tests|bin|src)/**/**.+(js|ts)\"",
+        "preversion": "npm run build"
     },
     "dependencies": {
         "@bunq-community/bunq-js-client": "^0.35.3",
@@ -25,7 +32,10 @@
         "yargs": "^12.0.5"
     },
     "devDependencies": {
-        "prettier": "^1.15.3"
+        "@types/node": "^10.12.12",
+        "prettier": "^1.15.3",
+        "ts-node": "^7.0.1",
+        "typescript": "^3.2.2"
     },
     "engines": {
         "node": ">=8.0.0"

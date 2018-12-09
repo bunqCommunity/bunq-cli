@@ -8,3 +8,6 @@
 bunq-cli-storage*.json
 
 yarn-error.log
+
+dist/*
+!dist/.gitkeep
