@@ -4,7 +4,7 @@ import * as path from "path";
 import chalk from "chalk";
 import BunqJSClient from "@bunq-community/bunq-js-client";
 import BunqCLIError from "./Errors";
-import MonetaryAccount from "./Models/MonetaryAccount";
+import MonetaryAccount from "./Types/MonetaryAccount";
 import { normalizePath, write, writeLine, startTime, endTimeFormatted } from "./Utils";
 
 // argument parsing with some default values
