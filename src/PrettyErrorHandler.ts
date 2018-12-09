@@ -1,14 +1,23 @@
-import BunqCLIError from "./Errors";
+import BunqCLIError, { DoneError } from "./Errors";
 import chalk from "chalk";
 
 export default error => {
+    if (error instanceof DoneError) {
+        throw error;
+    }
+
     if (error instanceof BunqCLIError) {
         console.error(chalk.red("\n" + error.message));
-    } else if (error.response && error.response.data) {
-        console.error(chalk.red("\nbunq API Error"));
-        console.error(`${error.response.config.method}: ${error.response.config.url}`);
-        console.error(error.response.data);
-    } else {
-        console.error(error);
+        return true;
     }
+
+    if (error.response && error.response.data) {
+        console.error(chalk.red("\nbunq API Error"));
+        console.error(`${error.response.config.method.toUpperCase()}: ${error.response.config.url}`);
+        console.error(error.response.data);
+        console.error("");
+        return true;
+    }
+
+    return false;
 };

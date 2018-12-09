@@ -12,6 +12,7 @@ import CallEndpoint from "./Actions/CallEndpoint";
 
 import { writeLine, clearConsole, separatorChoiceOption, formatMoney } from "../../Utils";
 import { DoneError } from "../../Errors";
+import PrettyErrorHandler from "../../PrettyErrorHandler";
 
 export default async bunqCLI => {
     clearConsole();
@@ -67,7 +68,6 @@ const inputCycle = async (bunqCLI, firstRun = false) => {
     }).run();
 
     clearConsole();
-
     switch (result) {
         case "call-endpoint":
             return CallEndpoint(bunqCLI);
@@ -106,12 +106,18 @@ const nextCycle = async (bunqCLI, firstRun = false) => {
     try {
         // wait for this cycle to finished
         await inputCycle(bunqCLI, firstRun);
-    } catch (ex) {
-        if (ex instanceof DoneError) {
+    } catch (error) {
+        // check if a DoneError was thrown to break the loop
+        if (error instanceof DoneError) {
             writeLine(chalk.green("\nFinished"));
             return;
         }
-        throw ex;
+
+        // attempt to write out a pretty error
+        const prettyError = PrettyErrorHandler(error);
+
+        // if no pretty error was completed, rethrow the error
+        if (!prettyError) throw error;
     }
 
     // go to next cycle once that finishes
