@@ -1,18 +1,16 @@
 import chalk from "chalk";
-// @ts-ignore
 const { Select } = require("enquirer");
-// @ts-ignore
 const packageInfo: any = require("../../../package.json");
+import { writeLine, clearConsole, separatorChoiceOption, formatMoney } from "../../Utils";
+import { DoneError } from "../../Errors";
+import PrettyErrorHandler from "../../PrettyErrorHandler";
 
 // interactive actions
 import SetupApiKey from "./Actions/SetupApiKey";
 import CreateMonetaryAccount from "./Actions/CreateMonetaryAccount";
 import RequestSandboxFunds from "./Actions/RequestSandboxFunds";
 import CallEndpoint from "./Actions/CallEndpoint";
-
-import { writeLine, clearConsole, separatorChoiceOption, formatMoney } from "../../Utils";
-import { DoneError } from "../../Errors";
-import PrettyErrorHandler from "../../PrettyErrorHandler";
+import ViewMonetaryAccounts from "./Actions/ViewMonetaryAccounts";
 
 export default async bunqCLI => {
     clearConsole();
@@ -35,10 +33,7 @@ const inputCycle = async (bunqCLI, firstRun = false) => {
 
     if (isReady) {
         const totalAccountBalance = bunqCLI.monetaryAccounts.reduce((total, account) => {
-            const accountType = Object.keys(account)[0];
-            const accountInfo = account[accountType];
-
-            return total + parseFloat(accountInfo.balance.value);
+            return total + parseFloat(account.balance.value);
         }, 0);
 
         writeLine(`User info: ${chalk.cyan(bunqCLI.user.display_name)}`);
@@ -51,7 +46,8 @@ const inputCycle = async (bunqCLI, firstRun = false) => {
 
     const choices = [];
     if (isReady) {
-        choices.push({ message: "Use an API endpoint", value: "call-endpoint" });
+        choices.push({ message: "View your monetary accounts", value: "view-monetary-account" });
+        choices.push({ message: "Call an API endpoint", value: "call-endpoint" });
         choices.push({ message: "Create a new monetary account", value: "create-monetary-account" });
         if (isSandbox) {
             choices.push({ message: "Add funds to sandbox account", value: "request-sandbox-funds" });
@@ -80,6 +76,9 @@ const inputCycle = async (bunqCLI, firstRun = false) => {
             break;
         case "setup-api-key":
             return SetupApiKey(bunqCLI);
+            break;
+        case "view-monetary-account":
+            return ViewMonetaryAccounts(bunqCLI);
             break;
         case "refresh":
             // do nothing and re-render

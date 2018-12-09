@@ -12,9 +12,16 @@ export default error => {
     }
 
     if (error.response && error.response.data) {
-        console.error(chalk.red("\nbunq API Error"));
+        console.error("");
+        console.error(chalk.red("bunq API Error"));
         console.error(`${error.response.config.method.toUpperCase()}: ${error.response.config.url}`);
         console.error(error.response.data);
+        console.error("");
+        return true;
+    }
+    if (error.code && error.code === "ENOTFOUND") {
+        console.error("");
+        console.error(chalk.red("bunq API seems unreachable"));
         console.error("");
         return true;
     }

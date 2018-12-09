@@ -65,6 +65,8 @@ export const displayQr = (text, errorLevel = "L") => {
  * @param moneyNumber
  */
 export const formatMoney = moneyNumber => {
+    moneyNumber = parseFloat(moneyNumber);
+
     return moneyNumber.toLocaleString("nl", {
         currency: "EUR",
         style: "currency",
@@ -72,6 +74,22 @@ export const formatMoney = moneyNumber => {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
     });
+};
+
+/**
+ * Adds space every fourth character for IBAN numbers
+ * @param iban
+ * @returns {string}
+ */
+export const formatIban = iban => {
+    const ret = [];
+    let len;
+
+    for (let i = 0, len = iban.length; i < len; i += 4) {
+        ret.push(iban.substr(i, 4));
+    }
+
+    return ret.join(" ");
 };
 
 /**

@@ -21,12 +21,11 @@ export default async bunqCLI => {
         await bunqCLI.getMonetaryAccounts();
 
         bunqCLI.monetaryAccounts.forEach(account => {
-            const accountType = Object.keys(account)[0];
-            if (argv.accountId && account[accountType].id === parseFloat(argv.accountId)) {
-                accountId = account[accountType].id;
+            if (argv.accountId && account.id === parseFloat(argv.accountId)) {
+                accountId = account.id;
             }
-            if (argv.account && account[accountType].description === argv.account) {
-                accountId = account[accountType].id;
+            if (argv.account && account.description === argv.account) {
+                accountId = account.id;
             }
             return false;
         });

@@ -8,6 +8,8 @@ bunqCLI
     .run()
     .then(() => process.exit())
     .catch(error => {
-        PrettyErrorHandler(error);
+        const showedPrettyError = PrettyErrorHandler(error);
+        if (!showedPrettyError) console.error(error);
+
         process.exit(1);
     });

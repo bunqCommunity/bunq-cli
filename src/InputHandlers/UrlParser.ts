@@ -15,8 +15,7 @@ export default (url, bunqCLI) => {
 
         // attempt to find an account matching the account description
         const matchedAccount = bunqCLI.monetaryAccounts.find(monetaryAccount => {
-            const accountType = Object.keys(monetaryAccount)[0];
-            return monetaryAccount[accountType] === accountDescription;
+            return monetaryAccount.description === accountDescription;
         });
 
         if (!matchedAccount) {
@@ -32,10 +31,9 @@ export default (url, bunqCLI) => {
         url = url.replace(fullMatchString, accountInfo.id);
     }
 
-    const accountType = Object.keys(bunqCLI.monetaryAccounts[0])[0];
-    const firstAccount = bunqCLI.monetaryAccounts[0][accountType];
 
     // generic AccountID replace for the first monetary account
+    const firstAccount = bunqCLI.monetaryAccounts[0];
     url = url.replace("AccountID", firstAccount.id);
     url = url.replace("AccountId", firstAccount.id);
 

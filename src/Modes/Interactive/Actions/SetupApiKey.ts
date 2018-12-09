@@ -1,4 +1,5 @@
 import chalk from "chalk";
+import BunqCLI from "../../../BunqCLI";
 
 import useExistingApiKeyPrompt from "../Prompts/api_key_use_existing";
 import apiKeyPrompt from "../Prompts/api_key";
@@ -8,7 +9,7 @@ import encryptionKeyPrompt from "../Prompts/api_encryption_key";
 
 import { write, writeLine } from "../../../Utils";
 
-export default async (bunqCLI, skipExistingQuestion = false) => {
+export default async (bunqCLI:BunqCLI , skipExistingQuestion = false) => {
     writeLine(chalk.blue(`Setting up bunqJSClient`));
     writeLine("");
 

@@ -3,7 +3,11 @@ import * as fs from "fs";
 import * as path from "path";
 import chalk from "chalk";
 import BunqJSClient from "@bunq-community/bunq-js-client";
+import BunqCLIError from "./Errors";
+import MonetaryAccount from "./Models/MonetaryAccount";
+import { normalizePath, write, writeLine, startTime, endTimeFormatted } from "./Utils";
 
+// argument parsing with some default values
 const defaultSavePath = path.join(os.homedir(), "bunq-cli.json");
 const defaultOutputLocationPath = path.join(os.homedir(), "bunq-cli-api-data");
 import yargs from "./yargs";
@@ -20,9 +24,6 @@ import ConsoleOutput from "./OutputHandlers/ConsoleOutput";
 // command modes
 import InteractiveMode from "./Modes/Interactive/interactive";
 import CLIMode from "./Modes/CLI/cli";
-
-import { normalizePath, write, writeLine, startTime, endTimeFormatted } from "./Utils";
-import BunqCLIError from "./Errors";
 
 export default class BunqCLI {
     public bunqJSClient: BunqJSClient;
@@ -43,7 +44,7 @@ export default class BunqCLI {
     // current user details
     public userType: string = "UserPerson";
     public user: any = {};
-    public monetaryAccounts: any = {};
+    public monetaryAccounts: MonetaryAccount[] = [];
 
     // default to a handler which does nothing
     public outputHandler: any = () => {};
@@ -166,10 +167,20 @@ export default class BunqCLI {
         const monetaryAccounts = await this.bunqJSClient.api.monetaryAccount.list(this.user.id);
 
         // filter out inactive accounts
-        this.monetaryAccounts = monetaryAccounts.filter(account => {
-            const accountType = Object.keys(account)[0];
-            return account[accountType].status === "ACTIVE";
-        });
+        this.monetaryAccounts = monetaryAccounts
+            .filter(account => {
+                const accountType = Object.keys(account)[0];
+                return account[accountType].status === "ACTIVE";
+            })
+            .map(account => {
+                const accountType = Object.keys(account)[0];
+                const parsedMonetaryAccount: MonetaryAccount = {
+                    accountType: accountType,
+                    ...account[accountType]
+                };
+
+                return parsedMonetaryAccount;
+            });
 
         if (this.interactive) writeLine(chalk.green(`Updated monetary accounts (${endTimeFormatted(startTime2)})`));
         return this.monetaryAccounts;

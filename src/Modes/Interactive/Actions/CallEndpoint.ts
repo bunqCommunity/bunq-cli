@@ -1,10 +1,11 @@
 import chalk from "chalk";
+import BunqCLI from "../../../BunqCLI";
 
 import selectEndpointPrompt from "../Prompts/select_endpoint";
 
 import { write, writeLine, startTime, endTimeFormatted } from "../../../Utils";
 
-export default async bunqCLI => {
+export default async (bunqCLI: BunqCLI) => {
     writeLine(chalk.blue(`Calling an API endpoint`));
     writeLine("");
 
