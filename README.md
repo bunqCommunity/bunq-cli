@@ -1,5 +1,10 @@
 # bunq-cli
-[![NPM  Version](https://img.shields.io/npm/v/@bunq-community/bunq-cli.svg)](https://github.com/@bunq-community/bunq-cli) [![NPM Downloads](https://img.shields.io/npm/dt/@bunq-community/bunq-cli.svg)](https://www.npmjs.com/package/@bunq-community/bunq-cli)
+[![NPM  Version](https://img.shields.io/npm/v/@bunq-community/bunq-cli.svg) ](https://github.com/@bunq-community/bunq-cli)
+[![NPM Downloads](https://img.shields.io/npm/dt/@bunq-community/bunq-cli.svg) ](https://www.npmjs.com/package/@bunq-community/bunq-cli)
+[![build status for master branch](https://api.travis-ci.org/bunqCommunity/bunq-cli.svg?branch=master) ](https://travis-ci.org/bunqCommunity/bunq-cli)
+[![MIT License](https://img.shields.io/npm/l/@bunq-community/bunq-cli.svg)](https://github.com/bunqCommunity/bunq-cli/blob/master/LICENSE)
+
+<!--[![codecov](https://codecov.io/gh/bunqCommunity/bunq-cli/branch/master/graph/badge.svg) ](https://codecov.io/gh/bunqCommunity/bunq-cli)-->
 
 An unofficial and open source CLI tool to quickly test API requests with the bunq API.
 
@@ -67,3 +72,14 @@ Only one of these can be use
  - `--account-id` to define which MonetaryAccount should be used by account ID
  - `--event-id` to define which object should be fetched, required for most GET endpoints.
  - `--pretty` Whether to prettify the JSON output or not. You can give it a string to use as spacer, defaults to 2 spaces, use '\t' to format with tabs for example
+
+## Contact
+[![Together topic badge](https://img.shields.io/badge/Together-Discuss-blue.svg) ](https://together.bunq.com/d/6180-bunq-cli-a-new-unofficial-command-line-tool-for-the-bunq-api/11) [![Telegram chat badge](https://img.shields.io/badge/Telegram-Discuss-blue.svg) ](https://t.me/bunqcommunity)
+
+We have a public [Telegram chat group](https://t.me/bunqcommunity) and a topic on [bunq together](https://together.bunq.com/d/5763-bunqdesktop-the-unofficial-free-and-open-source-desktop-application-for-bunq/).
+
+Feel free to create a new issue for any suggestions, bugs or general ideas you have on Github or contact us through one of the above.
+
+## Contributors ![Contributer count](https://img.shields.io/github/contributors/bunqcommunity/bunq-cli.svg)
+
+[![](https://sourcerer.io/fame/crecket/bunqCommunity/bunq-cli/images/0)](https://sourcerer.io/fame/crecket/bunqCommunity/bunq-cli/links/0)[![](https://sourcerer.io/fame/crecket/bunqCommunity/bunq-cli/images/1)](https://sourcerer.io/fame/crecket/bunqCommunity/bunq-cli/links/1)[![](https://sourcerer.io/fame/crecket/bunqCommunity/bunq-cli/images/2)](https://sourcerer.io/fame/crecket/bunqCommunity/bunq-cli/links/2)[![](https://sourcerer.io/fame/crecket/bunqCommunity/bunq-cli/images/3)](https://sourcerer.io/fame/crecket/bunqCommunity/bunq-cli/links/3)[![](https://sourcerer.io/fame/crecket/bunqCommunity/bunq-cli/images/4)](https://sourcerer.io/fame/crecket/bunqCommunity/bunq-cli/links/4)[![](https://sourcerer.io/fame/crecket/bunqCommunity/bunq-cli/images/5)](https://sourcerer.io/fame/crecket/bunqCommunity/bunq-cli/links/5)[![](https://sourcerer.io/fame/crecket/bunqCommunity/bunq-cli/images/6)](https://sourcerer.io/fame/crecket/bunqCommunity/bunq-cli/links/6)[![](https://sourcerer.io/fame/crecket/bunqCommunity/bunq-cli/images/7)](https://sourcerer.io/fame/crecket/bunqCommunity/bunq-cli/links/7)
