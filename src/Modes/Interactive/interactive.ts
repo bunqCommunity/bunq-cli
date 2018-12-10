@@ -67,26 +67,20 @@ const inputCycle = async (bunqCLI, firstRun = false) => {
     switch (result) {
         case "call-endpoint":
             return CallEndpoint(bunqCLI);
-            break;
         case "request-sandbox-funds":
             return RequestSandboxFunds(bunqCLI);
-            break;
         case "create-monetary-account":
             return CreateMonetaryAccount(bunqCLI);
-            break;
         case "setup-api-key":
             return SetupApiKey(bunqCLI);
-            break;
         case "view-monetary-account":
             return ViewMonetaryAccounts(bunqCLI);
-            break;
         case "refresh":
             // do nothing and re-render
             return;
         case "quit":
             // break out of loop
             throw new DoneError();
-            break;
     }
 };
 

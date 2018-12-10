@@ -1,16 +1,16 @@
-import BunqCLIError from "../../../Errors";
+import BunqCLI from "../../../BunqCLI";
 
 import FilterParser from "../../../InputHandlers/FilterParser";
 import UrlParser from "../../../InputHandlers/UrlParser";
 import DataParser from "../../../InputHandlers/DataParser";
 import MethodParser from "../../../InputHandlers/MethodParser";
 
-export default async bunqCLI => {
+export default async (bunqCLI: BunqCLI) => {
     const bunqJSClient = bunqCLI.bunqJSClient;
     const argv = bunqCLI.argv;
 
-    await bunqCLI.getUser();
-    await bunqCLI.getMonetaryAccounts();
+    await bunqCLI.getUser(true);
+    await bunqCLI.getMonetaryAccounts(true);
 
     const parsedMethod = MethodParser(argv.method, bunqCLI);
     const method = parsedMethod === "LIST" ? "GET" : parsedMethod;
@@ -24,7 +24,9 @@ export default async bunqCLI => {
         data,
         {},
         {
-            params: params
+            axiosOptions: {
+                params: params
+            }
         }
     );
 

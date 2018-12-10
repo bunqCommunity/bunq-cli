@@ -1,6 +1,7 @@
 import PaginationOptions from "@bunq-community/bunq-js-client/dist/Types/PaginationOptions";
+import BunqCLI from "../BunqCLI";
 
-export default bunqCLI => {
+export default (bunqCLI: BunqCLI) => {
     const argv = bunqCLI.argv;
 
     const requestOptions: PaginationOptions = {};

@@ -1,6 +1,7 @@
 import BunqCLIError from "../Errors";
+import BunqCLI from "../BunqCLI";
 
-export default (methodInput, bunqCLI) => {
+export default (methodInput, bunqCLI: BunqCLI) => {
     if (!methodInput) {
         return "GET";
     }

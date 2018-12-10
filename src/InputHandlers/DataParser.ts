@@ -1,6 +1,7 @@
 import BunqCLIError from "../Errors";
+import BunqCLI from "../BunqCLI";
 
-export default (dataInput, bunqCLI) => {
+export default (dataInput, bunqCLI: BunqCLI) => {
     if (!dataInput) return false;
 
     if (typeof dataInput !== "string") {
