@@ -14,14 +14,13 @@
         "dist/**/*"
     ],
     "scripts": {
-        "prebuild": "rm -r dist/*",
         "build": "tsc --listFiles --newline lf",
         "build:dev": "tsc -w --newline lf",
         "start": "ts-node ./index.ts",
         "test": "npm run test:prettier",
         "test:prettier": "prettier-check \"+(tests|bin|src)/**/**.+(js|ts)\" --tab-width 4 --print-width 120",
         "prettier": "./node_modules/.bin/prettier --tab-width 4 --print-width 120 --write \"+(tests|bin|src)/**/**.+(js|ts)\"",
-        "preversion": "npm run build"
+        "preversion": "rm -r dist/* && npm run build"
     },
     "dependencies": {
         "@bunq-community/bunq-js-client": "^0.35.4",
