@@ -6,6 +6,7 @@ export type AccountType = "MonetaryAccountBank" | "MonetaryAccountJoint" | "Mone
 
 interface MonetaryAccount {
     [key: string]: any;
+    id: number;
     accountType: AccountType;
     description: string;
     balance: Amount;

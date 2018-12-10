@@ -21,7 +21,7 @@ Install globally as a command `yarn global add @bunq-community/bunq-cli` or `npm
 
 Standard interactive mode while storing your keys at the default location:
 ```bash
-bunq-cli
+bunq-cli --save
 ```
 
 ## Roadmap

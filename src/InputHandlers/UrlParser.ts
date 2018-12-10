@@ -41,7 +41,8 @@ export default (url, bunqCLI: BunqCLI) => {
     // fix double slashes in path
     url = url.replace("//", "/");
 
-    if (!url.startsWith("/v1")) url = `/v1${url}`;
+    // append v1 to url if possible
+    if (url.startsWith("/") && !url.startsWith("/v1")) url = `/v1${url}`;
 
     return url;
 };
