@@ -9,7 +9,7 @@ import encryptionKeyPrompt from "../Prompts/api_encryption_key";
 
 import { write, writeLine } from "../../../Utils";
 
-export default async (bunqCLI:BunqCLI , skipExistingQuestion = false) => {
+export default async (bunqCLI: BunqCLI, skipExistingQuestion = false) => {
     writeLine(chalk.blue(`Setting up bunqJSClient`));
     writeLine("");
 

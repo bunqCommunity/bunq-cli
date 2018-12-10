@@ -3,7 +3,6 @@ import CounterpartyAlias from "@bunq-community/bunq-js-client/dist/Types/Counter
 
 export type AccountType = "MonetaryAccountBank" | "MonetaryAccountJoint" | "MonetaryAccountSavings";
 
-
 interface MonetaryAccount {
     [key: string]: any;
     id: number;

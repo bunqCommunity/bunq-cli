@@ -18,6 +18,8 @@
         "build": "tsc --listFiles --newline lf",
         "build:dev": "tsc -w --newline lf",
         "start": "ts-node ./index.ts",
+        "test": "npm run test:prettier",
+        "test:prettier": "prettier-check \"+(tests|bin|src)/**/**.+(js|ts)\" --tab-width 4 --print-width 120",
         "prettier": "./node_modules/.bin/prettier --tab-width 4 --print-width 120 --write \"+(tests|bin|src)/**/**.+(js|ts)\"",
         "preversion": "npm run build"
     },
@@ -28,6 +30,7 @@
         "dotenv": "^6.1.0",
         "enquirer": "^2.1.1",
         "json-store": "^1.0.0",
+        "prettier-check": "^2.0.0",
         "qrcode-terminal": "^0.12.0",
         "yargs": "^12.0.5"
     },
