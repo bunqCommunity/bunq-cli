@@ -1,6 +1,6 @@
 // @ts-ignore
 const { Select, Password } = require("enquirer");
-import { randomHex } from "../../../Utils";
+import { randomHex } from "../Utils";
 
 export default async ENCRYPTION_KEY => {
     const prompt = new Select({

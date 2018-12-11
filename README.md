@@ -33,13 +33,13 @@ bunq-cli --save
 ```
 
 ## Roadmap
-
--   Add a password option to allow for production API key storage
--   Support for both regular API key and OAuth logins through QR codes.
--   View current user, monetary accounts and other API data in interactive mode.
--   Transfers between own accounts by ID and description for CLI mode and through the UI in interactive mode.
-    -   `bunq-cli transfer --transfer-from Shopping --transfer-to Savings --amount 10`
-    -   `bunq-cli transfer --transfer-from-id 1234 --transfer-to-id 4321 --amount='12.36' --description='Less shopping'`
+ - Add a password option to allow for production API key storage
+ - Turn commands and actions into a module-like system
+ - Support for both regular API key and OAuth logins through QR codes.
+ - View current user, monetary accounts and other API data in interactive mode.
+ - Transfers between own accounts by ID and description for CLI mode and through the UI in interactive mode.
+    - `bunq-cli --cli --transfer --transfer-from Shopping --transfer-to Savings --amount 10`
+    - `bunq-cli --cli --transfer --transfer-from-id 1234 --transfer-to-id 4321 --amount='12.36' --description='Less shopping'`
 
 ## Options
 

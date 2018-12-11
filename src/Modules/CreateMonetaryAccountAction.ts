@@ -2,9 +2,9 @@ import chalk from "chalk";
 import * as awaiting from "awaiting";
 import BunqCLI from "../../../BunqCLI";
 
-import selectMonetaryAccountTypePrompt from "../../../Prompts/select_monetary_account_type";
-import genericStringPrompt from "../../../Prompts/generic_string_prompt";
-import colorPickerPrommpt from "../../../Prompts/color_picker";
+import selectMonetaryAccountTypePrompt from "../Prompts/select_monetary_account_type";
+import genericStringPrompt from "../Prompts/generic_string_prompt";
+import colorPickerPrommpt from "../Prompts/color_picker";
 
 import { write, writeLine, startTime, endTimeFormatted } from "../../../Utils";
 

@@ -2,7 +2,7 @@ import chalk from "chalk";
 import * as awaiting from "awaiting";
 import BunqCLI from "../../../BunqCLI";
 
-import monetaryAccountIdPrompt from "../../../Prompts/select_monetary_account_id";
+import monetaryAccountIdPrompt from "../Prompts/select_monetary_account_id";
 
 import { write, writeLine, startTime, endTimeFormatted } from "../../../Utils";
 
@@ -29,22 +29,15 @@ export default async (bunqCLI: BunqCLI) => {
             value: "sugardaddy@bunq.com"
         }
     );
+
     const timePassedLabel1 = endTimeFormatted(startTime1);
     writeLine(chalk.green(`Requested money for account: '${accountId}' (${timePassedLabel1})`));
-
-    // wait so bunq finishes accepting the request
-    write(chalk.yellow(`Waiting 3 seconds so the request can be accepted`));
-    await awaiting.delay(1000);
-    write(chalk.yellow(`Waiting 2 seconds so the request can be accepted`));
-    await awaiting.delay(1000);
-    write(chalk.yellow(`Waiting 1 seconds so the request can be accepted`));
-    await awaiting.delay(1000);
-    writeLine(chalk.green(`Finished waiting for the request`));
+    writeLine("");
 
     // when completed, update the stored monetary accounts list
     await bunqCLI.getMonetaryAccounts(true);
 
     writeLine("");
 
-    return;
+    return await awaiting.delay(250);
 };

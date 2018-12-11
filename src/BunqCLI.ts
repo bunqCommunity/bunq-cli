@@ -5,6 +5,7 @@ import chalk from "chalk";
 import BunqJSClient from "@bunq-community/bunq-js-client";
 import BunqCLIError from "./Errors";
 import MonetaryAccount from "./Types/MonetaryAccount";
+import BunqCLIModule from "./Types/BunqCLIModule";
 import { normalizePath, write, writeLine, startTime, endTimeFormatted } from "./Utils";
 
 // argument parsing with some default values
@@ -22,6 +23,7 @@ import FileOutput from "./OutputHandlers/FileOutput";
 import ConsoleOutput from "./OutputHandlers/ConsoleOutput";
 
 // command modes
+import CallEndpoint from "./Modes/Interactive/Actions/CallEndpoint";
 import InteractiveMode from "./Modes/Interactive/interactive";
 import CLIMode from "./Modes/CLI/cli";
 
@@ -54,6 +56,8 @@ export default class BunqCLI {
     public endpoints: any = {};
     // stored api data in memory
     public apiData: any = {};
+
+    private modules: BunqCLIModule[] =[];
 
     constructor() {
         this.argv = argv;
@@ -133,6 +137,8 @@ export default class BunqCLI {
         // setup the actual bunqjsclient and endpoints
         this.storage = CustomStore(this.saveLocation);
         this.bunqJSClient = new BunqJSClient(this.storage);
+
+        this.modules.push(CallEndpoint)
 
         this.endpoints = Endpoints(this);
     }

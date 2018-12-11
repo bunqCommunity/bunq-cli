@@ -1,11 +1,12 @@
 import chalk from "chalk";
-import BunqCLI from "../../../BunqCLI";
+import BunqCLI from "../BunqCLI";
+import BunqCLIModule from "../Types/BunqCLIModule";
 
 import selectEndpointPrompt from "../Prompts/select_endpoint";
 
-import { write, writeLine, startTime, endTimeFormatted } from "../../../Utils";
+import { write, writeLine, startTime, endTimeFormatted } from "../Utils";
 
-export default async (bunqCLI: BunqCLI) => {
+const handle = async (bunqCLI: BunqCLI) => {
     writeLine(chalk.blue(`Calling an API endpoint`));
     writeLine("");
 
@@ -28,3 +29,11 @@ export default async (bunqCLI: BunqCLI) => {
     bunqCLI.outputHandler(apiEndpointResponse, "JSON", selectedEndpoint.label);
     writeLine("");
 };
+
+const CallEndpointAction: BunqCLIModule = {
+    id: "call-endpoint-action",
+    handle: handle,
+    type: "INTERACTIVE"
+};
+
+export default CallEndpointAction;

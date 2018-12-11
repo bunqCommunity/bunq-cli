@@ -9,7 +9,7 @@ import PrettyErrorHandler from "../../PrettyErrorHandler";
 import SetupApiKey from "./Actions/SetupApiKey";
 import CreateMonetaryAccount from "./Actions/CreateMonetaryAccount";
 import RequestSandboxFunds from "./Actions/RequestSandboxFunds";
-import CallEndpoint from "./Actions/CallEndpoint";
+// import CallEndpoint from "./Actions/CallEndpoint";
 import ViewMonetaryAccounts from "./Actions/ViewMonetaryAccounts";
 
 export default async bunqCLI => {
@@ -65,8 +65,8 @@ const inputCycle = async (bunqCLI, firstRun = false) => {
 
     clearConsole();
     switch (result) {
-        case "call-endpoint":
-            return CallEndpoint(bunqCLI);
+        // case "call-endpoint":
+        //     return CallEndpoint(bunqCLI);
         case "request-sandbox-funds":
             return RequestSandboxFunds(bunqCLI);
         case "create-monetary-account":

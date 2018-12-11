@@ -1,11 +1,11 @@
 import chalk from "chalk";
 import BunqCLI from "../../../BunqCLI";
 
-import useExistingApiKeyPrompt from "../../../Prompts/api_key_use_existing";
-import apiKeyPrompt from "../../../Prompts/api_key";
-import environmentPrompt from "../../../Prompts/api_environment";
-import deviceNamePrompt from "../../../Prompts/api_device_name";
-import encryptionKeyPrompt from "../../../Prompts/api_encryption_key";
+import useExistingApiKeyPrompt from "../Prompts/api_key_use_existing";
+import apiKeyPrompt from "../Prompts/api_key";
+import environmentPrompt from "../Prompts/api_environment";
+import deviceNamePrompt from "../Prompts/api_device_name";
+import encryptionKeyPrompt from "../Prompts/api_encryption_key";
 
 import { write, writeLine } from "../../../Utils";
 
@@ -18,23 +18,19 @@ export default async (bunqCLI: BunqCLI, skipExistingQuestion = false) => {
     const storage = bunqCLI.storage;
     const argv = bunqCLI.argv;
 
-    // attempt to get stored data if saveData is true
-    let API_KEY = saveData === false ? false : storage.get("API_KEY");
-    let ENVIRONMENT = saveData === false ? false : storage.get("ENVIRONMENT");
-    let ENCRYPTION_KEY = saveData === false ? false : storage.get("ENCRYPTION_KEY");
-    let DEVICE_NAME = saveData === false ? false : storage.get("DEVICE_NAME");
+    const storedApiKey = saveData === false ? false : storage.get("API_KEY");
+    const storedEnvironment = saveData === false ? false : storage.get("ENVIRONMENT");
+    const storedEncryptionKey = saveData === false ? false : storage.get("ENCRYPTION_KEY");
+    const storedDeviceName = saveData === false ? false : storage.get("DEVICE_NAME");
 
-    // if overwrite or no API key set
-    if (argv.overwrite || !API_KEY) {
-        if (argv.apiKey) API_KEY = argv.apiKey;
-        if (argv.environment) ENVIRONMENT = argv.environment;
-        if (argv.encryptionKey) ENCRYPTION_KEY = argv.encryptionKey;
-        if (argv.deviceName) DEVICE_NAME = argv.deviceName;
-    }
+    let API_KEY = argv.apiKey || storedApiKey;
+    let ENVIRONMENT = argv.environment || storedEnvironment;
+    let ENCRYPTION_KEY = argv.encryptionKey || storedEncryptionKey;
+    let DEVICE_NAME = argv.deviceName || storedDeviceName;
 
     if (!skipExistingQuestion) {
         let newKeyWasSet = false;
-        if (API_KEY && API_KEY !== "generate") {
+        if (API_KEY) {
             const useKey = await useExistingApiKeyPrompt();
             if (useKey === "new") {
                 API_KEY = await apiKeyPrompt(bunqJSClient);
@@ -67,7 +63,7 @@ export default async (bunqCLI: BunqCLI, skipExistingQuestion = false) => {
         }
     }
 
-    if (API_KEY && API_KEY !== "generate") {
+    if (API_KEY) {
         const apiKeyPreview = ENVIRONMENT === "SANDBOX" ? API_KEY.substr(0, 16) : API_KEY.substr(0, 8);
         writeLine(`API Key starts with: ${chalk.cyan(apiKeyPreview)}`);
         writeLine(`Environment: ${chalk.cyan(ENVIRONMENT)}`);
