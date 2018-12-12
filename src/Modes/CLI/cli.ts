@@ -62,7 +62,7 @@ export default async bunqCLI => {
     await bunqJSClient.registerDevice(DEVICE_NAME);
     await bunqJSClient.registerSession();
 
-    switch(bunqCLI.cliCommands[0]){
+    switch (bunqCLI.cliCommands[0]) {
         case "user":
             return UserCommand(bunqCLI);
         case "accounts":
