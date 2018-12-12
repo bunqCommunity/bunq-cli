@@ -1,5 +1,5 @@
 export default async bunqCLI => {
-    if (!bunqCLI.monetaryAccounts) await bunqCLI.getMonetaryAccounts();
+    if (!bunqCLI.hasMonetaryAccounts) await bunqCLI.getMonetaryAccounts(true);
 
     bunqCLI.outputHandler(bunqCLI.monetaryAccounts);
 };

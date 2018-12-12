@@ -109,3 +109,17 @@ export const endTimeFormatted = startTime => {
     }
     return timePassedLabel;
 };
+
+export const cleanupData = data => {
+    if (data.Response) {
+        data = data.Response;
+
+        return cleanupData(data);
+    } else if (Array.isArray(data) && data.length === 1) {
+        data = data[0];
+
+        return cleanupData(data);
+    }
+
+    return data;
+};

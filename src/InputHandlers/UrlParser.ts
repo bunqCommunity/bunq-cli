@@ -10,7 +10,8 @@ export default (url, bunqCLI: BunqCLI) => {
     url = url.replace("UserId", bunqCLI.user.id);
 
     // attempt to find an account matching the given account description
-    const accountDescriptionMatches = url.match(/Account=([\w]*)/);
+    const accountDescriptionMatches = url.match(/Account='?([\w ]*)'?[\/|\z]?/);
+
     if (accountDescriptionMatches) {
         const fullMatchString = accountDescriptionMatches[0];
         const accountDescription = accountDescriptionMatches[1];
@@ -26,17 +27,9 @@ export default (url, bunqCLI: BunqCLI) => {
             );
         }
 
-        const accountType = Object.keys(matchedAccount)[0];
-        const accountInfo = matchedAccount[accountType];
-
         // replace the entire section with the matched account ID
-        url = url.replace(fullMatchString, accountInfo.id);
+        url = url.replace(fullMatchString, matchedAccount.id);
     }
-
-    // generic AccountID replace for the first monetary account
-    const firstAccount = bunqCLI.monetaryAccounts[0];
-    url = url.replace("AccountID", firstAccount.id);
-    url = url.replace("AccountId", firstAccount.id);
 
     // fix double slashes in path
     url = url.replace("//", "/");

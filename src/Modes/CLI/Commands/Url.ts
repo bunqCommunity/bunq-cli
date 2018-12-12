@@ -14,8 +14,9 @@ export default async (bunqCLI: BunqCLI) => {
 
     const parsedMethod = MethodParser(argv.method, bunqCLI);
     const method = parsedMethod === "LIST" ? "GET" : parsedMethod;
+    const urlInput = bunqCLI.cliCommands[1];
     const data = DataParser(argv.data, bunqCLI);
-    const url = UrlParser(argv.url, bunqCLI);
+    const url = UrlParser(urlInput, bunqCLI);
     const params = FilterParser(bunqCLI);
 
     const result = await bunqJSClient.ApiAdapter.request(
