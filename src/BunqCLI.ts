@@ -13,6 +13,9 @@ const defaultOutputLocationPath = path.join(os.homedir(), "bunq-cli-api-data");
 import yargs from "./yargs";
 const argv: any = yargs({ defaultSavePath, defaultOutputLocationPath });
 
+console.log(argv);
+process.exit();
+
 // setup helpers
 import Endpoints from "./Endpoints";
 import CustomStore from "./CustomStore";
