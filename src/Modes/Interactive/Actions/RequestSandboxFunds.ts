@@ -29,15 +29,22 @@ export default async (bunqCLI: BunqCLI) => {
             value: "sugardaddy@bunq.com"
         }
     );
-
     const timePassedLabel1 = endTimeFormatted(startTime1);
     writeLine(chalk.green(`Requested money for account: '${accountId}' (${timePassedLabel1})`));
-    writeLine("");
+
+    // wait so bunq finishes accepting the request
+    write(chalk.yellow(`Waiting 3 seconds so the request can be accepted`));
+    await awaiting.delay(1000);
+    write(chalk.yellow(`Waiting 2 seconds so the request can be accepted`));
+    await awaiting.delay(1000);
+    write(chalk.yellow(`Waiting 1 seconds so the request can be accepted`));
+    await awaiting.delay(1000);
+    writeLine(chalk.green(`Finished waiting for the request`));
 
     // when completed, update the stored monetary accounts list
     await bunqCLI.getMonetaryAccounts(true);
 
     writeLine("");
-
-    return await awaiting.delay(250);
+    
+    return;
 };

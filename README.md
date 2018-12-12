@@ -12,7 +12,7 @@ An unofficial and open source CLI tool to quickly test API requests with the bun
 Either test API requests interactively or use it directly in other command line tools and cronjobs.
 
 <p align="center">
-    <img src="./assets/bunq-cli-2.gif" alt="Example usage gif" />
+    <img src="./assets/bunq-cli-3.gif" alt="Example usage gif" />
 </p>
 <p align="center"><i>Interactive mode example</i></p>
 

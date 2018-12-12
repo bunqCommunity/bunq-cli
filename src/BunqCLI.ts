@@ -156,13 +156,11 @@ export default class BunqCLI {
      * @param forceUpdate
      */
     public async getMonetaryAccounts(forceUpdate = false) {
-        if (!forceUpdate && this.monetaryAccounts) {
+        if (!forceUpdate && this.hasMonetaryAccounts) {
             return this.monetaryAccounts;
         }
 
-        if (!this.user) {
-            await this.getUser();
-        }
+        if (!this.user) await this.getUser(true);
 
         if (this.interactive) write(chalk.yellow(`Updating monetary account list ... `));
         const startTime2 = startTime();

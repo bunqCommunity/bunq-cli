@@ -34,7 +34,7 @@ export default async (bunqCLI: BunqCLI, skipExistingQuestion = false) => {
 
     if (!skipExistingQuestion) {
         let newKeyWasSet = false;
-        if (API_KEY) {
+        if (API_KEY && API_KEY !== "generate") {
             const useKey = await useExistingApiKeyPrompt();
             if (useKey === "new") {
                 API_KEY = await apiKeyPrompt(bunqJSClient);
@@ -67,7 +67,7 @@ export default async (bunqCLI: BunqCLI, skipExistingQuestion = false) => {
         }
     }
 
-    if (API_KEY) {
+    if (API_KEY && API_KEY !== "generate") {
         const apiKeyPreview = ENVIRONMENT === "SANDBOX" ? API_KEY.substr(0, 16) : API_KEY.substr(0, 8);
         writeLine(`API Key starts with: ${chalk.cyan(apiKeyPreview)}`);
         writeLine(`Environment: ${chalk.cyan(ENVIRONMENT)}`);
