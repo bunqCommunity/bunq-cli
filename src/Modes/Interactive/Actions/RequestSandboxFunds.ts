@@ -45,6 +45,6 @@ export default async (bunqCLI: BunqCLI) => {
     await bunqCLI.getMonetaryAccounts(true);
 
     writeLine("");
-    
+
     return;
 };
