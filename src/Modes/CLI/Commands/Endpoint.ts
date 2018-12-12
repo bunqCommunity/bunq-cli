@@ -18,7 +18,7 @@ export default async bunqCLI => {
 
     if (argv.account || argv.accountId) {
         // get the latest account list
-        await bunqCLI.getMonetaryAccounts();
+        await bunqCLI.getMonetaryAccounts(true);
 
         bunqCLI.monetaryAccounts.forEach(account => {
             if (argv.accountId && account.id === parseFloat(argv.accountId)) {
@@ -27,7 +27,6 @@ export default async bunqCLI => {
             if (argv.account && account.description === argv.account) {
                 accountId = account.id;
             }
-            return false;
         });
         if (!accountId) {
             throw new BunqCLIError(`No account found for the given account description/ID`);
@@ -47,6 +46,20 @@ export default async bunqCLI => {
     if (bunqCLI.user.id) requestParameters.push(bunqCLI.user.id);
     if (accountId) requestParameters.push(accountId);
     if (eventId) requestParameters.push(eventId);
+
+    // get the expected argument count, optional arguments aren't counted!
+    const argumentCount = bunqJSClient.api[argv.endpoint][lowerCaseMethod].length;
+
+    // check if the length is correc
+    if (requestParameters.length !== argumentCount) {
+        throw new BunqCLIError(
+            `Invalid amount of arguments given, received ${
+                requestParameters.length
+            } and expected ${argumentCount}. Did you forget toe accountId or eventId argument?`
+        );
+    }
+
+    // now add the optional parameters
     requestParameters.push(params);
 
     // call the actual endpoint
