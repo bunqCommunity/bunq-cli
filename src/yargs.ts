@@ -1,91 +1,174 @@
-const yargs = ({ defaultSavePath, defaultOutputLocationPath }) => {
-    const yargsResult: any = require("yargs")
-        .alias({
-            save: "s",
-            cli: "c",
-            eventId: "event",
-            account: "older-id",
-            olderId: "older-id",
-            newerId: "newer-id"
-        })
+const yargs = require("yargs");
+
+const yargsResult = ({ defaultSavePath, defaultOutputLocationPath }) => {
+    let argv = {};
+
+    const EndpointUrlSubCommand = type => yargs => {
+        const methodChoices = type === "url" ? ["LIST", "GET", "POST", "PUT"] : ["LIST", "GET"];
+
+        argv = yargs
+            .help("help")
+            .completion("completion")
+            .usage(`bunq-cli cli ${type} <${type}> [options]`)
+            .wrap(Math.min(120, yargs.terminalWidth()))
+            .demandCommand(1, 1, `Please provide the ${type} you would like to use`)
+            .epilogue(`The different options for the ${type} CLI subcommand`)
+
+            .group(["save", "output", "outputLocation"], "General")
+
+            .alias({
+                eventId: "event-id",
+                accountId: "account-id",
+                olderId: "older-id",
+                newerId: "newer-id"
+            })
+            .choices({
+                method: methodChoices
+            })
+            .default({
+                method: "LIST",
+                count: 200
+            })
+
+            .describe({
+                method: "HTTP method, defaults to LIST",
+                count: "Amount of items to returns between 1 and 200",
+                olderId: "Only return events newer than this event ID",
+                newerId: "Only return events older than this event ID",
+                data: "JSON data as a string for POST/PUT requests",
+
+                account: "Account description of the account to use in API calls",
+                accountId: "Account ID of the account to use in API calls",
+                eventId: "Event ID of the even to do a API call for"
+            })
+
+            .example(
+                "bunq-cli url /user/UserID/monetary-accounts/Account=Shopping/payment --count=50",
+                "Outputs up to 50 payments for the current User and the 'Shopping' account"
+            )
+            .example(
+                "bunq-cli endpoint bunqMeTab --count=50",
+                "Outputs up to 50 payments for the current User and the 'Shopping' account"
+            ).argv;
+    };
+
+    argv = yargs
         .env("BUNQ_CLI")
-        .boolean(["user", "accounts", "events"])
-        .string(["endpoint", "url"])
-        .normalize(["outputLocation"])
+        .help("help")
+        .scriptName("bunq-cli")
+        .usage(
+            `Interactive mode: bunq-cli 
+Or use a command: bunq-cli <sub-command> [options]`
+        )
+        .wrap(Math.min(120, yargs.terminalWidth()))
+        .epilogue("for more information, check the readme at https://github.com/bunqCommunity/bunq-cli")
 
-        .group(["cli", "save", "output", "outputLocation"], "General")
-        // .group([], "Interactive mode options")
-        .group(["user", "accounts", "events", "endpoint", "url"], "CLI mode commands - only use 1 at a time")
-        .group(["method", "olderId", "newerId", "count", "data", "account", "accountId", "eventId"], "CLI options")
+        .group(["save", "output", "overwrite", "memory", "outputLocation"], "General")
+        .group(["apiKey", "deviceName", "encryptionKey", "environment"], "API details")
 
-        .default({
-            save: false,
-            output: false,
-            method: "LIST",
-            count: 200,
-            outputLocation: defaultOutputLocationPath
-        })
+        .command("interactive", "Interactive mode")
+        .command("user", "Get the user info")
+        .command("accounts", "Fetches all monetary accounts")
+        .command("events", "Fetches the events for the user")
+        .command("url", "Send a request directly for a given url", EndpointUrlSubCommand("url"))
+        .command(
+            "endpoint",
+            "Simplified way to call standard GET and LIST endpoints",
+            EndpointUrlSubCommand("endpoint")
+        )
 
-        .choices({
-            output: ["file", "f", "console", "c", false],
-            method: ["LIST", "GET", "POST", "PUT", "DELETE"]
+        .completion("completion")
+        .command("zsh-completion", "generate zsh completion script", yargs => {
+            process.stdout.write(`###-begin-bunq-cli-completions-###
+#
+# yargs command completion script
+#
+# Installation: bunq-cli zsh-completion >> ~/.zshrc
+#    or bunq-cli zsh-completion >> ~/.bash_profile on OSX.
+#
+_yargs_completions()
+{
+  local reply
+  local si=$IFS
+
+  # ask yargs to generate completions.
+  IFS=$'\\n' reply=($(COMP_CWORD="$((CURRENT-1))" COMP_LINE="$BUFFER" COMP_POINT="$CURSOR" bunq-cli --get-yargs-completions "\${words[@]}"))
+  IFS=$si
+
+  _describe 'values' reply
+}
+compdef _yargs_completions bunq-cli
+###-end-bunq-cli-completions-###`);
+            process.exit();
         })
 
         .describe({
-            cli: "CLI mode for a non-interactive usage",
-            save: "Storage location for bunqJSClient data, ignored if not defined",
-            output:
-                "Output type for API data, ignored if not defined. Default in interactive mode = false, default in CLI mode = console",
-            outputLocation: "Directory location for API output, ignored if 'output' not defined",
+            save: "Storage location for bunqJSClient data",
+            output: "How to output the API data",
+            memory: "Use memory only, overwrites the save option",
+            overwrite: "Overwrite the stored API key data with the given info",
+            outputLocation: "Directory location for API output files",
 
-            user: "fetches the User object",
-            accounts: "fetches all monetary accounts",
-            events: "fetches the events for the user",
-            endpoint: "a specific endpoint you want to call",
-            url: "send a request directly for a given url, combine with --data, --method and the LIST options",
+            pretty: "Makes the JSON output more readable when outputting to console or files",
+            clean: "Simplifies some API output like removing the Response wrapper",
 
-            method: "HTTP method, defaults to LIST",
-            count: "Amount of items to returns between 1 and 200",
-            olderId: "Only return events newer than this event ID",
-            newerId: "Only return events older than this event ID",
-            data: "JSON data as a string for POST/PUT requests",
+            apiKey: "The bunq API key, creates a sandbox key by default",
+            deviceName: "Device name to identify the API key",
+            encryptionKey: "Encryption key for bunqJSClient, generates a random key by default",
+            environment: "bunq API environment to use"
+        })
+        .default({
+            save: defaultSavePath,
+            output: false,
+            memory: false,
+            overwrite: false,
+            clean: false,
+            pretty: false,
+            outputLocation: defaultOutputLocationPath,
 
-            account: "Account description of the account to use in API calls",
-            accountId: "Account ID of the account to use in API calls",
-            eventId: "Event ID of the even to do a API call for"
+            apiKey: "generate",
+            deviceName: "My device",
+            environment: "SANDBOX"
+        })
+        .alias({
+            save: "s",
+            output: "o",
+            outputLocation: "output-location",
+            apiKey: "api-key",
+            deviceName: "device-name",
+            encryptionKey: "encryption-key"
+        })
+        .normalize(["outputLocation"])
+        .string(["apiKey", "deviceName", "encryptionKey"])
+        .boolean(["memory", "overwrite", "clean", "pretty"])
+        .choices({
+            output: ["file", "console", false],
+            environment: ["PRODUCTION", "SANDBOX"]
         })
 
-        .example("bunq-cli --save", "The default interactive mode which saves bunqJSClient data for fast re-runs")
-        .example("bunq-cli --cli --accounts", "Outputs the monetary accounts into the console")
+        .example("bunq-cli accounts", "Outputs the monetary accounts into the console")
         .example(
-            "bunq-cli -c --events ---output=file",
-            "Outputs the user events into a new file in the --storage-location directory"
-        )
-        .example(
-            "bunq-cli -c --url /v1/user/UserID/monetary-accounts/Account=Shopping/payment --count=50",
-            "Outputs up to 50 payments for the current User and the 'Shopping' account"
-        )
-
-        .epilogue("for more information, check the readme at https://github.com/bunqCommunity/bunq-cli")
-        .help("help").argv;
+            "bunq-cli events ---output=file",
+            "Outputs the user events into a new file in the --output-location directory"
+        ).argv;
 
     // go through arguments and fix boolean values
-    Object.keys(arguments).forEach(key => {
-        const value = arguments[key];
+    Object.keys(argv).forEach(key => {
+        const value = argv[key];
 
         if (typeof value === "string") {
             switch (value) {
                 case "true":
-                    arguments[key] = true;
+                    argv[key] = true;
                     break;
                 case "false":
-                    arguments[key] = false;
+                    argv[key] = false;
                     break;
             }
         }
     });
 
-    return yargsResult;
+    return argv;
 };
 
-export default yargs;
+export default yargsResult;

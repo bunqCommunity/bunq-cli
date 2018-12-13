@@ -1,5 +1,7 @@
-export default async bunqCLI => {
-    if (!bunqCLI.monetaryAccounts) await bunqCLI.getMonetaryAccounts();
+import BunqCLI from "../../../BunqCLI";
 
-    bunqCLI.outputHandler(bunqCLI.monetaryAccounts);
+export default async (bunqCLI: BunqCLI) => {
+    if (!bunqCLI.hasMonetaryAccounts) await bunqCLI.getMonetaryAccounts(true);
+
+    bunqCLI.outputHandler(bunqCLI.monetaryAccountsRaw);
 };

@@ -31,6 +31,7 @@ export default class BunqCLI {
 
     // pretty output message
     public interactive: boolean = false;
+    public cliCommands: false | string[] = false;
 
     // public/bunqJSClient storage handler and location details
     public storage: any | null = null;
@@ -43,23 +44,37 @@ export default class BunqCLI {
 
     // current user details
     public userType: string = "UserPerson";
-    public user: any = {};
+    public user: any | false = false;
     public monetaryAccounts: MonetaryAccount[] = [];
+    public monetaryAccountsRaw: any[] = [];
 
     // default to a handler which does nothing
     public outputHandler: any = () => {};
-
     // the different endpoints directly supported by bunq-cli
     public endpoints: any = {};
-
     // stored api data in memory
     public apiData: any = {};
 
     constructor() {
         this.argv = argv;
-        this.interactive = !argv.cli;
+        this.interactive = argv._.length === 0 || argv._.includes("interactive");
+
+        if (!this.interactive) {
+            this.cliCommands = argv._;
+        }
 
         this.setup();
+    }
+
+    /**
+     * Run bunq-cli
+     */
+    public async run() {
+        if (this.interactive) {
+            return InteractiveMode(this);
+        } else {
+            return CLIMode(this);
+        }
     }
 
     /**
@@ -71,12 +86,7 @@ export default class BunqCLI {
         }
 
         // bunqjsclient save/output settings
-        if (this.argv.save) {
-            if (typeof this.argv.save === "string" && this.argv.save === "true") {
-                if (this.argv.save === "true") this.argv.save = true;
-                if (this.argv.save === "false") this.argv.save = false;
-            }
-
+        if (!this.argv.memory) {
             // custom or default value if defined
             this.saveLocation = this.argv.save !== true ? normalizePath(this.argv.save) : defaultSavePath;
             this.saveData = true;
@@ -107,7 +117,7 @@ export default class BunqCLI {
                 }
 
                 // setup a file handler
-                this.outputHandler = FileOutput(this.outputLocation, this.interactive);
+                this.outputHandler = FileOutput(this);
             }
             if (this.argv.output === "console" || this.argv.output === "c") {
                 if (this.interactive) {
@@ -128,16 +138,8 @@ export default class BunqCLI {
     }
 
     /**
-     * Run bunq-cli
+     * @param forceUpdate
      */
-    public async run() {
-        if (this.interactive) {
-            return InteractiveMode(this);
-        } else {
-            return CLIMode(this);
-        }
-    }
-
     public async getUser(forceUpdate = false) {
         if (this.interactive) write(chalk.yellow("Fetching users list ..."));
         const userStartTime = startTime();
@@ -151,23 +153,24 @@ export default class BunqCLI {
         return this.user;
     }
 
+    /**
+     * @param forceUpdate
+     */
     public async getMonetaryAccounts(forceUpdate = false) {
-        if (!forceUpdate && this.monetaryAccounts) {
+        if (!forceUpdate && this.hasMonetaryAccounts) {
             return this.monetaryAccounts;
         }
 
-        if (!this.user) {
-            await this.getUser();
-        }
+        if (!this.user) await this.getUser(true);
 
         if (this.interactive) write(chalk.yellow(`Updating monetary account list ... `));
         const startTime2 = startTime();
 
         // check API
-        const monetaryAccounts = await this.bunqJSClient.api.monetaryAccount.list(this.user.id);
+        this.monetaryAccountsRaw = await this.bunqJSClient.api.monetaryAccount.list(this.user.id);
 
         // filter out inactive accounts
-        this.monetaryAccounts = monetaryAccounts
+        this.monetaryAccounts = this.monetaryAccountsRaw
             .filter(account => {
                 const accountType = Object.keys(account)[0];
                 return account[accountType].status === "ACTIVE";
@@ -184,5 +187,9 @@ export default class BunqCLI {
 
         if (this.interactive) writeLine(chalk.green(`Updated monetary accounts (${endTimeFormatted(startTime2)})`));
         return this.monetaryAccounts;
+    }
+
+    public get hasMonetaryAccounts(): boolean {
+        return this.monetaryAccounts.length > 0;
     }
 }

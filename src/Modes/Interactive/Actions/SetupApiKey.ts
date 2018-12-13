@@ -18,19 +18,23 @@ export default async (bunqCLI: BunqCLI, skipExistingQuestion = false) => {
     const storage = bunqCLI.storage;
     const argv = bunqCLI.argv;
 
-    const storedApiKey = saveData === false ? false : storage.get("API_KEY");
-    const storedEnvironment = saveData === false ? false : storage.get("ENVIRONMENT");
-    const storedEncryptionKey = saveData === false ? false : storage.get("ENCRYPTION_KEY");
-    const storedDeviceName = saveData === false ? false : storage.get("DEVICE_NAME");
+    // attempt to get stored data if saveData is true
+    let API_KEY = saveData === false ? false : storage.get("API_KEY");
+    let ENVIRONMENT = saveData === false ? false : storage.get("ENVIRONMENT");
+    let ENCRYPTION_KEY = saveData === false ? false : storage.get("ENCRYPTION_KEY");
+    let DEVICE_NAME = saveData === false ? false : storage.get("DEVICE_NAME");
 
-    let API_KEY = argv.apiKey || storedApiKey;
-    let ENVIRONMENT = argv.environment || storedEnvironment;
-    let ENCRYPTION_KEY = argv.encryptionKey || storedEncryptionKey;
-    let DEVICE_NAME = argv.deviceName || storedDeviceName;
+    // if overwrite or no API key set
+    if (argv.overwrite || !API_KEY) {
+        if (argv.apiKey) API_KEY = argv.apiKey;
+        if (argv.environment) ENVIRONMENT = argv.environment;
+        if (argv.encryptionKey) ENCRYPTION_KEY = argv.encryptionKey;
+        if (argv.deviceName) DEVICE_NAME = argv.deviceName;
+    }
 
     if (!skipExistingQuestion) {
         let newKeyWasSet = false;
-        if (API_KEY) {
+        if (API_KEY && API_KEY !== "generate") {
             const useKey = await useExistingApiKeyPrompt();
             if (useKey === "new") {
                 API_KEY = await apiKeyPrompt(bunqJSClient);
@@ -63,7 +67,7 @@ export default async (bunqCLI: BunqCLI, skipExistingQuestion = false) => {
         }
     }
 
-    if (API_KEY) {
+    if (API_KEY && API_KEY !== "generate") {
         const apiKeyPreview = ENVIRONMENT === "SANDBOX" ? API_KEY.substr(0, 16) : API_KEY.substr(0, 8);
         writeLine(`API Key starts with: ${chalk.cyan(apiKeyPreview)}`);
         writeLine(`Environment: ${chalk.cyan(ENVIRONMENT)}`);

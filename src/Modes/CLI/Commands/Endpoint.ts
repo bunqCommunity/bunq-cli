@@ -1,9 +1,10 @@
+import BunqCLI from "../../../BunqCLI";
 import BunqCLIError from "../../../Errors";
 
 import FilterParser from "../../../InputHandlers/FilterParser";
 import MethodParser from "../../../InputHandlers/MethodParser";
 
-export default async bunqCLI => {
+export default async (bunqCLI: BunqCLI) => {
     const bunqJSClient = bunqCLI.bunqJSClient;
     const argv = bunqCLI.argv;
 
@@ -13,8 +14,9 @@ export default async bunqCLI => {
     const params = FilterParser(bunqCLI);
     const method = MethodParser(argv.method, bunqCLI);
     const lowerCaseMethod = method.toLowerCase();
-    let accountId = false;
+    let accountId: number | false = false;
     const eventId = argv.eventId || false;
+    const endpoint = bunqCLI.cliCommands[1];
 
     if (argv.account || argv.accountId) {
         // get the latest account list
@@ -33,12 +35,12 @@ export default async bunqCLI => {
         }
     }
 
-    if (typeof bunqJSClient.api[argv.endpoint] === "undefined") {
-        throw new BunqCLIError(`Endpoint (${argv.endpoint}) not found or unsupported`);
+    if (typeof bunqJSClient.api[endpoint] === "undefined") {
+        throw new BunqCLIError(`Endpoint (${endpoint}) not found or unsupported`);
     }
-    if (typeof bunqJSClient.api[argv.endpoint][lowerCaseMethod] === "undefined") {
+    if (typeof bunqJSClient.api[endpoint][lowerCaseMethod] === "undefined") {
         throw new BunqCLIError(
-            `The method (${lowerCaseMethod}) for this endpoint (${argv.endpoint}) not found or unsupported`
+            `The method (${lowerCaseMethod}) for this endpoint (${endpoint}) not found or unsupported`
         );
     }
 
@@ -48,14 +50,14 @@ export default async bunqCLI => {
     if (eventId) requestParameters.push(eventId);
 
     // get the expected argument count, optional arguments aren't counted!
-    const argumentCount = bunqJSClient.api[argv.endpoint][lowerCaseMethod].length;
+    const argumentCount = bunqJSClient.api[endpoint][lowerCaseMethod].length;
 
     // check if the length is correc
     if (requestParameters.length !== argumentCount) {
         throw new BunqCLIError(
             `Invalid amount of arguments given, received ${
                 requestParameters.length
-            } and expected ${argumentCount}. Did you forget toe accountId or eventId argument?`
+            } and expected ${argumentCount}.\nDid you forget the --account/--account-id or --event-id argument?`
         );
     }
 
@@ -63,12 +65,12 @@ export default async bunqCLI => {
     requestParameters.push(params);
 
     // call the actual endpoint
-    let apiResult = await bunqJSClient.api[argv.endpoint][lowerCaseMethod](...requestParameters);
+    let apiResult = await bunqJSClient.api[endpoint][lowerCaseMethod](...requestParameters);
 
     // store the data in memory
-    if (!bunqCLI.apiData[argv.endpoint]) bunqCLI.apiData[argv.endpoint] = {};
-    if (!bunqCLI.apiData[argv.endpoint][method]) bunqCLI.apiData[argv.endpoint][method] = {};
-    bunqCLI.apiData[argv.endpoint][method] = apiResult;
+    if (!bunqCLI.apiData[endpoint]) bunqCLI.apiData[endpoint] = {};
+    if (!bunqCLI.apiData[endpoint][method]) bunqCLI.apiData[endpoint][method] = {};
+    bunqCLI.apiData[endpoint][method] = apiResult;
 
     // output the results
     bunqCLI.outputHandler(apiResult);

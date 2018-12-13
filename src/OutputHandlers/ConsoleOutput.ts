@@ -1,4 +1,4 @@
-import { write, writeRaw } from "../Utils";
+import { cleanupData, write, writeRaw } from "../Utils";
 
 export default bunqCLI => {
     return (data, type = "JSON", label = "") => {
@@ -12,6 +12,10 @@ export default bunqCLI => {
                 break;
             case "JSON":
             default:
+                if (bunqCLI.argv.clean) {
+                    data = cleanupData(data);
+                }
+
                 if (bunqCLI.argv.pretty) {
                     let prettySpacer = "  ";
                     if (bunqCLI.argv.pretty !== true) {
@@ -22,6 +26,7 @@ export default bunqCLI => {
                 } else {
                     writeRaw(JSON.stringify(data));
                 }
+                writeRaw("\n");
                 break;
         }
     };
