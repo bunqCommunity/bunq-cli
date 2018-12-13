@@ -15,7 +15,7 @@ export default async bunqCLI => {
     writeLine(chalk.blue(`bunq-cli v${packageInfo.version} - interactive mode`));
 
     // do an initial run
-    await SetupApiKeyAction.handle(bunqCLI);
+    await SetupApiKeyAction.handle(bunqCLI, true);
 
     return nextCycle(bunqCLI);
 };
