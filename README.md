@@ -35,7 +35,6 @@ bunq-cli --save
 ## Roadmap
 
 -   Add a password option to allow for production API key storage
--   Create sandbox accounts with `bunq-cli sandbox-account`.
 -   Support for both regular API key and OAuth logins through QR codes.
 -   View current user, monetary accounts and other API data in interactive mode.
 -   Transfers between own accounts by ID and description for CLI mode and through the UI in interactive mode.
@@ -87,6 +86,7 @@ By default the `--output` mode is set to `console` when using sub commands.
 -   `bunq-cli user` fetches the User object.
 -   `bunq-cli accounts` fetches all monetary accounts for the current User object.
 -   `bunq-cli events` fetches all events using the `/user/{userId}/event` endpoint.
+-   `bunq-cli create-key` Creates a new Sandbox environment API key and outputs it
 
 ## Advanced commands
 

@@ -3,6 +3,7 @@ import UserCommand from "./Commands/User";
 import EventsCommand from "./Commands/Events";
 import AccountsCommand from "./Commands/Accounts";
 import EndpointCommand from "./Commands/Endpoint";
+import SandboxKeyCommand from "./Commands/SandboxKey";
 
 import BunqCLIError from "../../Errors";
 import { randomHex } from "../../Utils";
@@ -12,6 +13,13 @@ export default async bunqCLI => {
     const bunqJSClient = bunqCLI.bunqJSClient;
     const saveData = bunqCLI.saveData;
     const storage = bunqCLI.storage;
+    const subCommand = bunqCLI.cliCommands[0];
+
+    // commands which don't require a bunqjsclient setup:
+    switch (subCommand) {
+        case "create-key":
+            return SandboxKeyCommand(bunqCLI);
+    }
 
     // attempt to get stored data if saveData is true
     let API_KEY = saveData === false ? false : storage.get("API_KEY");
@@ -62,7 +70,7 @@ export default async bunqCLI => {
     await bunqJSClient.registerDevice(DEVICE_NAME);
     await bunqJSClient.registerSession();
 
-    switch (bunqCLI.cliCommands[0]) {
+    switch (subCommand) {
         case "user":
             return UserCommand(bunqCLI);
         case "accounts":

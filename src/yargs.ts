@@ -71,6 +71,7 @@ Or use a command: bunq-cli <sub-command> [options]`
         .command("accounts", "Fetches all monetary accounts")
         .command("events", "Fetches the events for the user")
         .command("url", "Send a request directly for a given url", EndpointUrlSubCommand("url"))
+        .command("create-key", "Creates a new Sandbox environment API key")
         .command(
             "endpoint",
             "Simplified way to call standard GET and LIST endpoints",
