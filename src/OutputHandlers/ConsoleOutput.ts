@@ -26,6 +26,7 @@ export default bunqCLI => {
                 } else {
                     writeRaw(JSON.stringify(data));
                 }
+                writeRaw("\n");
                 break;
         }
     };

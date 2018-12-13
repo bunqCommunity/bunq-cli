@@ -46,6 +46,7 @@ export default class BunqCLI {
     public userType: string = "UserPerson";
     public user: any | false = false;
     public monetaryAccounts: MonetaryAccount[] = [];
+    public monetaryAccountsRaw: any[] = [];
 
     // default to a handler which does nothing
     public outputHandler: any = () => {};
@@ -166,10 +167,10 @@ export default class BunqCLI {
         const startTime2 = startTime();
 
         // check API
-        const monetaryAccounts = await this.bunqJSClient.api.monetaryAccount.list(this.user.id);
+        this.monetaryAccountsRaw = await this.bunqJSClient.api.monetaryAccount.list(this.user.id);
 
         // filter out inactive accounts
-        this.monetaryAccounts = monetaryAccounts
+        this.monetaryAccounts = this.monetaryAccountsRaw
             .filter(account => {
                 const accountType = Object.keys(account)[0];
                 return account[accountType].status === "ACTIVE";
