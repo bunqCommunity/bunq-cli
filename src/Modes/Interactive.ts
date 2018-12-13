@@ -1,14 +1,14 @@
 import chalk from "chalk";
 const { Select } = require("enquirer");
-const packageInfo: any = require("../../../package.json");
-import { DoneError } from "../../Errors";
-import BunqCLIModule, { InteractiveBunqCLIModule } from "../../Types/BunqCLIModule";
+const packageInfo: any = require("../../package.json");
+import { DoneError } from "../Errors";
+import BunqCLIModule, { InteractiveBunqCLIModule } from "../Types/BunqCLIModule";
 
-import { writeLine, clearConsole, separatorChoiceOption, formatMoney } from "../../Utils";
-import PrettyErrorHandler from "../../PrettyErrorHandler";
+import { writeLine, clearConsole, separatorChoiceOption, formatMoney } from "../Utils";
+import PrettyErrorHandler from "../PrettyErrorHandler";
 
 // interactive actio
-import SetupApiKeyAction from "../../Modules/SetupApiKeyAction";
+import SetupApiKeyAction from "../Modules/Interactive/SetupApiKeyAction";
 
 export default async bunqCLI => {
     clearConsole();

@@ -1,14 +1,14 @@
 import chalk from "chalk";
-import BunqCLI from "../BunqCLI";
-import { InteractiveBunqCLIModule } from "../Types/BunqCLIModule";
+import BunqCLI from "../../BunqCLI";
+import { InteractiveBunqCLIModule } from "../../Types/BunqCLIModule";
 
-import useExistingApiKeyPrompt from "../Prompts/api_key_use_existing";
-import apiKeyPrompt from "../Prompts/api_key";
-import environmentPrompt from "../Prompts/api_environment";
-import deviceNamePrompt from "../Prompts/api_device_name";
-import encryptionKeyPrompt from "../Prompts/api_encryption_key";
+import useExistingApiKeyPrompt from "../../Prompts/api_key_use_existing";
+import apiKeyPrompt from "../../Prompts/api_key";
+import environmentPrompt from "../../Prompts/api_environment";
+import deviceNamePrompt from "../../Prompts/api_device_name";
+import encryptionKeyPrompt from "../../Prompts/api_encryption_key";
 
-import { write, writeLine } from "../Utils";
+import { write, writeLine } from "../../Utils";
 
 const handle = async (bunqCLI: BunqCLI, skipExistingQuestion = false) => {
     writeLine(chalk.blue(`Setting up bunqJSClient`));

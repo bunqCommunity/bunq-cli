@@ -2,7 +2,7 @@ import BunqCLI from "../BunqCLI";
 
 export type BunqCLIModuleType = "INTERACTIVE" | "CLI";
 export type BunqCLIVisibilityTypes = "ALWAYS" | "AUTHENTICATED" | "SANDBOX";
-export type BunqCLIModuleHandleCallable = (bunqCLI: BunqCLI, ...args: any) => Promise<any>;
+export type BunqCLIModuleHandleCallable = (bunqCLI: BunqCLI, ...args: any[]) => Promise<any>;
 
 class BunqCLIModule {
     // string to identify the module

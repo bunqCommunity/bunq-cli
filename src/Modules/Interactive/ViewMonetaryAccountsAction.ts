@@ -1,10 +1,10 @@
 import chalk from "chalk";
-import BunqCLI from "../BunqCLI";
-import MonetaryAccount from "../Types/MonetaryAccount";
-import { InteractiveBunqCLIModule } from "../Types/BunqCLIModule";
+import BunqCLI from "../../BunqCLI";
+import MonetaryAccount from "../../Types/MonetaryAccount";
+import { InteractiveBunqCLIModule } from "../../Types/BunqCLIModule";
 import CounterpartyAlias from "@bunq-community/bunq-js-client/dist/Types/CounterpartyAlias";
 
-import { writeLine, formatMoney, formatIban } from "../Utils";
+import { writeLine, formatMoney, formatIban } from "../../Utils";
 
 const handle = async (bunqCLI: BunqCLI) => {
     writeLine(chalk.blue(`View your monetary accounts`));

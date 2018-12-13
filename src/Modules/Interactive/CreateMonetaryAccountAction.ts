@@ -1,13 +1,13 @@
 import chalk from "chalk";
 import * as awaiting from "awaiting";
-import BunqCLI from "../BunqCLI";
-import { InteractiveBunqCLIModule } from "../Types/BunqCLIModule";
+import BunqCLI from "../../BunqCLI";
+import { InteractiveBunqCLIModule } from "../../Types/BunqCLIModule";
 
-import selectMonetaryAccountTypePrompt from "../Prompts/select_monetary_account_type";
-import genericStringPrompt from "../Prompts/generic_string_prompt";
-import colorPickerPrommpt from "../Prompts/color_picker";
+import selectMonetaryAccountTypePrompt from "../../Prompts/select_monetary_account_type";
+import genericStringPrompt from "../../Prompts/generic_string_prompt";
+import colorPickerPrommpt from "../../Prompts/color_picker";
 
-import { write, writeLine, startTime, endTimeFormatted } from "../Utils";
+import { write, writeLine, startTime, endTimeFormatted } from "../../Utils";
 
 const handle = async (bunqCLI: BunqCLI) => {
     writeLine(chalk.blue(`Creating a new monetary account`));

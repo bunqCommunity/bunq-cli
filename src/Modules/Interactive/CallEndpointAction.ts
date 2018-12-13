@@ -1,10 +1,10 @@
 import chalk from "chalk";
-import BunqCLI from "../BunqCLI";
-import { InteractiveBunqCLIModule } from "../Types/BunqCLIModule";
+import BunqCLI from "../../BunqCLI";
+import { InteractiveBunqCLIModule } from "../../Types/BunqCLIModule";
 
-import selectEndpointPrompt from "../Prompts/select_endpoint";
+import selectEndpointPrompt from "../../Prompts/select_endpoint";
 
-import { write, writeLine, startTime, endTimeFormatted } from "../Utils";
+import { write, writeLine, startTime, endTimeFormatted } from "../../Utils";
 
 const handle = async (bunqCLI: BunqCLI) => {
     writeLine(chalk.blue(`Calling an API endpoint`));

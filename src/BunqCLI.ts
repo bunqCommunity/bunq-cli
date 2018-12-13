@@ -23,15 +23,15 @@ import FileOutput from "./OutputHandlers/FileOutput";
 import ConsoleOutput from "./OutputHandlers/ConsoleOutput";
 
 // command modes
-import InteractiveMode from "./Modes/Interactive/interactive";
+import InteractiveMode from "./Modes/Interactive";
 import CLIMode from "./Modes/CLI/cli";
 
 // Modules
-import CallEndpointAction from "./Modules/CallEndpointAction";
-import CreateMonetaryAccountAction from "./Modules/CreateMonetaryAccountAction";
-import RequestSandboxFundsAction from "./Modules/RequestSandboxFundsAction";
-import SetupApiKeyAction from "./Modules/SetupApiKeyAction";
-import ViewMonetaryAccountsAction from "./Modules/ViewMonetaryAccountsAction";
+import CallEndpointAction from "./Modules/Interactive/CallEndpointAction";
+import CreateMonetaryAccountAction from "./Modules/Interactive/CreateMonetaryAccountAction";
+import RequestSandboxFundsAction from "./Modules/Interactive/RequestSandboxFundsAction";
+import SetupApiKeyAction from "./Modules/Interactive/SetupApiKeyAction";
+import ViewMonetaryAccountsAction from "./Modules/Interactive/ViewMonetaryAccountsAction";
 
 export default class BunqCLI {
     public bunqJSClient: BunqJSClient;

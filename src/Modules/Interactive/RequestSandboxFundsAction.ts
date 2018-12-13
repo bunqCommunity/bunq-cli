@@ -1,11 +1,11 @@
 import chalk from "chalk";
 import * as awaiting from "awaiting";
-import BunqCLI from "../BunqCLI";
-import { InteractiveBunqCLIModule } from "../Types/BunqCLIModule";
+import BunqCLI from "../../BunqCLI";
+import { InteractiveBunqCLIModule } from "../../Types/BunqCLIModule";
 
-import monetaryAccountIdPrompt from "../Prompts/select_monetary_account_id";
+import monetaryAccountIdPrompt from "../../Prompts/select_monetary_account_id";
 
-import { write, writeLine, startTime, endTimeFormatted } from "../Utils";
+import { write, writeLine, startTime, endTimeFormatted } from "../../Utils";
 
 const handle = async (bunqCLI: BunqCLI) => {
     writeLine(chalk.blue(`Requesting sandbox funds`));
