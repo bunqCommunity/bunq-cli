@@ -1,10 +1,11 @@
-import BunqCLI from "../../../BunqCLI";
-import BunqCLIError from "../../../Errors";
+import BunqCLI from "../../BunqCLI";
+import BunqCLIError from "../../Errors";
+import { CommandLineBunqCLIModule } from "../../Types/BunqCLIModule";
 
-import FilterParser from "../../../InputHandlers/FilterParser";
-import MethodParser from "../../../InputHandlers/MethodParser";
+import FilterParser from "../../InputHandlers/FilterParser";
+import MethodParser from "../../InputHandlers/MethodParser";
 
-export default async (bunqCLI: BunqCLI) => {
+const handle = async (bunqCLI: BunqCLI) => {
     const bunqJSClient = bunqCLI.bunqJSClient;
     const argv = bunqCLI.argv;
 
@@ -75,3 +76,10 @@ export default async (bunqCLI: BunqCLI) => {
     // output the results
     bunqCLI.outputHandler(apiResult);
 };
+
+const EndpointCommand = new CommandLineBunqCLIModule();
+EndpointCommand.command = "endpoint";
+EndpointCommand.message = "Call an API endpoint";
+EndpointCommand.handle = handle;
+
+export default EndpointCommand;

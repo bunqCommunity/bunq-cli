@@ -6,13 +6,13 @@ import BunqJSClient from "@bunq-community/bunq-js-client";
 import BunqCLIError from "./Errors";
 import MonetaryAccount from "./Types/MonetaryAccount";
 import BunqCLIModule from "./Types/BunqCLIModule";
-import { normalizePath, write, writeLine, startTime, endTimeFormatted } from "./Utils";
 
 // argument parsing with some default values
 const defaultSavePath = path.join(os.homedir(), "bunq-cli.json");
 const defaultOutputLocationPath = path.join(os.homedir(), "bunq-cli-api-data");
 import yargs from "./yargs";
 const argv: any = yargs({ defaultSavePath, defaultOutputLocationPath });
+import { normalizePath, write, writeLine, startTime, endTimeFormatted } from "./Utils";
 
 // setup helpers
 import Endpoints from "./Endpoints";
@@ -24,14 +24,7 @@ import ConsoleOutput from "./OutputHandlers/ConsoleOutput";
 
 // command modes
 import InteractiveMode from "./Modes/Interactive";
-import CLIMode from "./Modes/CLI/cli";
-
-// Modules
-import CallEndpointAction from "./Modules/Interactive/CallEndpointAction";
-import CreateMonetaryAccountAction from "./Modules/Interactive/CreateMonetaryAccountAction";
-import RequestSandboxFundsAction from "./Modules/Interactive/RequestSandboxFundsAction";
-import SetupApiKeyAction from "./Modules/Interactive/SetupApiKeyAction";
-import ViewMonetaryAccountsAction from "./Modules/Interactive/ViewMonetaryAccountsAction";
+import CLIMode from "./Modes/CLI";
 
 export default class BunqCLI {
     public bunqJSClient: BunqJSClient;
@@ -143,13 +136,6 @@ export default class BunqCLI {
         // setup the actual bunqjsclient and endpoints
         this.storage = CustomStore(this.saveLocation);
         this.bunqJSClient = new BunqJSClient(this.storage);
-
-        // register the modules in order
-        this.modules.push(ViewMonetaryAccountsAction);
-        this.modules.push(CallEndpointAction);
-        this.modules.push(CreateMonetaryAccountAction);
-        this.modules.push(RequestSandboxFundsAction);
-        this.modules.push(SetupApiKeyAction);
 
         this.endpoints = Endpoints(this);
     }

@@ -9,10 +9,21 @@ import PrettyErrorHandler from "../PrettyErrorHandler";
 
 // interactive actio
 import SetupApiKeyAction from "../Modules/Interactive/SetupApiKeyAction";
+import ViewMonetaryAccountsAction from "../Modules/Interactive/ViewMonetaryAccountsAction";
+import CallEndpointAction from "../Modules/Interactive/CallEndpointAction";
+import CreateMonetaryAccountAction from "../Modules/Interactive/CreateMonetaryAccountAction";
+import RequestSandboxFundsAction from "../Modules/Interactive/RequestSandboxFundsAction";
 
 export default async bunqCLI => {
     clearConsole();
     writeLine(chalk.blue(`bunq-cli v${packageInfo.version} - interactive mode`));
+
+    // register the modules in order
+    bunqCLI.modules.push(ViewMonetaryAccountsAction);
+    bunqCLI.modules.push(CallEndpointAction);
+    bunqCLI.modules.push(CreateMonetaryAccountAction);
+    bunqCLI.modules.push(RequestSandboxFundsAction);
+    bunqCLI.modules.push(SetupApiKeyAction);
 
     // do an initial run
     await SetupApiKeyAction.handle(bunqCLI, true);
@@ -41,7 +52,7 @@ const inputCycle = async (bunqCLI, firstRun = false) => {
     writeLine(""); // end api info
 
     // filter out modules based on the visibility setting
-    const allowedModules = bunqCLI.modules.filter((module: BunqCLIModule) => {
+    const allowedModules = bunqCLI.modules.filter((module: InteractiveBunqCLIModule) => {
         if (module instanceof InteractiveBunqCLIModule) {
             if (Array.isArray(module.visibility)) {
                 return module.visibility.every(bunqCLI.checkModuleVisibility);

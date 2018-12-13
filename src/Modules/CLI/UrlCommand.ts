@@ -1,11 +1,12 @@
-import BunqCLI from "../../../BunqCLI";
+import BunqCLI from "../../BunqCLI";
+import { CommandLineBunqCLIModule } from "../../Types/BunqCLIModule";
 
-import FilterParser from "../../../InputHandlers/FilterParser";
-import UrlParser from "../../../InputHandlers/UrlParser";
-import DataParser from "../../../InputHandlers/DataParser";
-import MethodParser from "../../../InputHandlers/MethodParser";
+import FilterParser from "../../InputHandlers/FilterParser";
+import UrlParser from "../../InputHandlers/UrlParser";
+import DataParser from "../../InputHandlers/DataParser";
+import MethodParser from "../../InputHandlers/MethodParser";
 
-export default async (bunqCLI: BunqCLI) => {
+const handle = async (bunqCLI: BunqCLI) => {
     const bunqJSClient = bunqCLI.bunqJSClient;
     const argv = bunqCLI.argv;
 
@@ -33,3 +34,10 @@ export default async (bunqCLI: BunqCLI) => {
 
     bunqCLI.outputHandler(result.data);
 };
+
+const UrlCommand = new CommandLineBunqCLIModule();
+UrlCommand.command = "url";
+UrlCommand.message = "Call a specific url with the given parameters and data";
+UrlCommand.handle = handle;
+
+export default UrlCommand;
