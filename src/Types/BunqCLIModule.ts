@@ -1,19 +1,27 @@
+import BunqCLI from "../BunqCLI";
+
 export type BunqCLIModuleType = "INTERACTIVE" | "CLI";
+export type BunqCLIVisibilityTypes = "ALWAYS" | "AUTHENTICATED" | "SANDBOX";
+export type BunqCLIModuleHandleCallable = (bunqCLI: BunqCLI, ...args: any) => Promise<any>;
 
-export type BunqCLIVisibilityTypes = "ALWAYS" | "AUTHENTICATED" | "";
-
-interface BunqCLIModule {
-    [key: string]: any;
+class BunqCLIModule {
     // string to identify the module
-    id: string;
+    public id: string;
     // a callable function
-    handle: any;
+    public handle: BunqCLIModuleHandleCallable;
     // when is the interactive action useable
-    visibility?: BunqCLIVisibilityTypes | BunqCLIVisibilityTypes[];
+    public visibility?: BunqCLIVisibilityTypes | BunqCLIVisibilityTypes[];
     // interactive or cli
-    type: BunqCLIModuleType;
-    // list of modules this one depends on
-    depends_on?: string[];
+    public type: BunqCLIModuleType;
+}
+
+export class InteractiveBunqCLIModule extends BunqCLIModule {
+    // pretty name for interactive modules
+    public message: string;
+}
+export class CommandLineBunqCLIModule extends BunqCLIModule {
+    // optional yargs handler to improve command line output
+    public yargs?: any;
 }
 
 export default BunqCLIModule;

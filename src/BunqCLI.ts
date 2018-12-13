@@ -23,9 +23,15 @@ import FileOutput from "./OutputHandlers/FileOutput";
 import ConsoleOutput from "./OutputHandlers/ConsoleOutput";
 
 // command modes
-import CallEndpoint from "./Modes/Interactive/Actions/CallEndpoint";
 import InteractiveMode from "./Modes/Interactive/interactive";
 import CLIMode from "./Modes/CLI/cli";
+
+// Modules
+import CallEndpointAction from "./Modules/CallEndpointAction";
+import CreateMonetaryAccountAction from "./Modules/CreateMonetaryAccountAction";
+import RequestSandboxFundsAction from "./Modules/RequestSandboxFundsAction";
+import SetupApiKeyAction from "./Modules/SetupApiKeyAction";
+import ViewMonetaryAccountsAction from "./Modules/ViewMonetaryAccountsAction";
 
 export default class BunqCLI {
     public bunqJSClient: BunqJSClient;
@@ -57,7 +63,7 @@ export default class BunqCLI {
     // stored api data in memory
     public apiData: any = {};
 
-    private modules: BunqCLIModule[] =[];
+    private modules: BunqCLIModule[] = [];
 
     constructor() {
         this.argv = argv;
@@ -138,7 +144,12 @@ export default class BunqCLI {
         this.storage = CustomStore(this.saveLocation);
         this.bunqJSClient = new BunqJSClient(this.storage);
 
-        this.modules.push(CallEndpoint)
+        // register the modules in order
+        this.modules.push(ViewMonetaryAccountsAction);
+        this.modules.push(CallEndpointAction);
+        this.modules.push(CreateMonetaryAccountAction);
+        this.modules.push(RequestSandboxFundsAction);
+        this.modules.push(SetupApiKeyAction);
 
         this.endpoints = Endpoints(this);
     }
@@ -198,4 +209,19 @@ export default class BunqCLI {
     public get hasMonetaryAccounts(): boolean {
         return this.monetaryAccounts.length > 0;
     }
+
+    public checkModuleVisibility = permission => {
+        const isReady = !!this.bunqJSClient.apiKey;
+        const isSandbox = this.bunqJSClient.Session.environment === "SANDBOX";
+
+        switch (permission) {
+            case "ALWAYS":
+                return true;
+            case "SANDBOX":
+                return isSandbox;
+            case "AUTHENTICATED":
+                return isReady;
+        }
+        return false;
+    };
 }

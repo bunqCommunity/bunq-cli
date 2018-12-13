@@ -1,5 +1,6 @@
 import chalk from "chalk";
-import BunqCLI from "../../../BunqCLI";
+import BunqCLI from "../BunqCLI";
+import { InteractiveBunqCLIModule } from "../Types/BunqCLIModule";
 
 import useExistingApiKeyPrompt from "../Prompts/api_key_use_existing";
 import apiKeyPrompt from "../Prompts/api_key";
@@ -7,9 +8,9 @@ import environmentPrompt from "../Prompts/api_environment";
 import deviceNamePrompt from "../Prompts/api_device_name";
 import encryptionKeyPrompt from "../Prompts/api_encryption_key";
 
-import { write, writeLine } from "../../../Utils";
+import { write, writeLine } from "../Utils";
 
-export default async (bunqCLI: BunqCLI, skipExistingQuestion = false) => {
+const handle = async (bunqCLI: BunqCLI, skipExistingQuestion = false) => {
     writeLine(chalk.blue(`Setting up bunqJSClient`));
     writeLine("");
 
@@ -98,3 +99,12 @@ export default async (bunqCLI: BunqCLI, skipExistingQuestion = false) => {
         writeLine("");
     }
 };
+
+const SetupApiKeyAction = new InteractiveBunqCLIModule();
+SetupApiKeyAction.id = "setup-apikey-action";
+SetupApiKeyAction.message = "Change API key settings";
+SetupApiKeyAction.handle = handle;
+SetupApiKeyAction.visibility = "ALWAYS";
+SetupApiKeyAction.type = "INTERACTIVE";
+
+export default SetupApiKeyAction;

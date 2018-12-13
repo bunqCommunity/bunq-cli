@@ -1,6 +1,6 @@
 import chalk from "chalk";
 import BunqCLI from "../BunqCLI";
-import BunqCLIModule from "../Types/BunqCLIModule";
+import { InteractiveBunqCLIModule } from "../Types/BunqCLIModule";
 
 import selectEndpointPrompt from "../Prompts/select_endpoint";
 
@@ -30,10 +30,11 @@ const handle = async (bunqCLI: BunqCLI) => {
     writeLine("");
 };
 
-const CallEndpointAction: BunqCLIModule = {
-    id: "call-endpoint-action",
-    handle: handle,
-    type: "INTERACTIVE"
-};
+const CallEndpointAction = new InteractiveBunqCLIModule();
+CallEndpointAction.id = "call-api-endpoint-action";
+CallEndpointAction.message = "Call an API endpoint";
+CallEndpointAction.handle = handle;
+CallEndpointAction.visibility = "AUTHENTICATED";
+CallEndpointAction.type = "INTERACTIVE";
 
 export default CallEndpointAction;

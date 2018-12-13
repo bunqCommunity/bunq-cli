@@ -1,11 +1,12 @@
 import chalk from "chalk";
-import BunqCLI from "../../../BunqCLI";
-import MonetaryAccount from "../../../Types/MonetaryAccount";
+import BunqCLI from "../BunqCLI";
+import MonetaryAccount from "../Types/MonetaryAccount";
+import { InteractiveBunqCLIModule } from "../Types/BunqCLIModule";
 import CounterpartyAlias from "@bunq-community/bunq-js-client/dist/Types/CounterpartyAlias";
 
-import { writeLine, formatMoney, formatIban } from "../../../Utils";
+import { writeLine, formatMoney, formatIban } from "../Utils";
 
-export default async (bunqCLI: BunqCLI) => {
+const handle = async (bunqCLI: BunqCLI) => {
     writeLine(chalk.blue(`View your monetary accounts`));
     writeLine("");
 
@@ -49,3 +50,12 @@ export default async (bunqCLI: BunqCLI) => {
     });
     writeLine("");
 };
+
+const ViewMonetaryAccountsAction = new InteractiveBunqCLIModule();
+ViewMonetaryAccountsAction.id = "view-monetary-accounts-action";
+ViewMonetaryAccountsAction.message = "View your monetary accounts";
+ViewMonetaryAccountsAction.handle = handle;
+ViewMonetaryAccountsAction.visibility = "AUTHENTICATED";
+ViewMonetaryAccountsAction.type = "INTERACTIVE";
+
+export default ViewMonetaryAccountsAction;
