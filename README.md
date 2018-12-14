@@ -52,7 +52,7 @@ Make sure to use `--help` to view the specific options you can use for each sub 
 
 ### Generic options
 
-These are the most basic options that you'll need. If `--save` or `-s` isn't defined, bunqJSClient will do everything in memory without writing data to a file. Subsequent API calls will be faster if you do use this option since it won't have to setup a new API session with bunq.
+These are the most basic options that you'll need. If `--memory` is defined, the bunqJSClient will do everything in memory without writing data to a file. Subsequent API calls will be faster if you do not use this option since it won't have to setup a new API session with bunq the next time you use bunq-cli.
 
 -   `--save`/`-s` Location to store the API session info, defaults to `$HOME/bunq-cli.json`. Use the --memory option to ignore stored data.
 -   `--memory` Ignores the stored session info and does everything in memory, useful for testing sandbox scripts without removing the stored key.
