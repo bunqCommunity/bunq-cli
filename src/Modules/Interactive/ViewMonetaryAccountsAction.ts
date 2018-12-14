@@ -56,6 +56,5 @@ ViewMonetaryAccountsAction.id = "view-monetary-accounts-action";
 ViewMonetaryAccountsAction.message = "View your monetary accounts";
 ViewMonetaryAccountsAction.handle = handle;
 ViewMonetaryAccountsAction.visibility = "AUTHENTICATED";
-ViewMonetaryAccountsAction.type = "INTERACTIVE";
 
 export default ViewMonetaryAccountsAction;

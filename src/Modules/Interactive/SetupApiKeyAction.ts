@@ -105,6 +105,5 @@ SetupApiKeyAction.id = "setup-apikey-action";
 SetupApiKeyAction.message = "Change API key settings";
 SetupApiKeyAction.handle = handle;
 SetupApiKeyAction.visibility = "ALWAYS";
-SetupApiKeyAction.type = "INTERACTIVE";
 
 export default SetupApiKeyAction;

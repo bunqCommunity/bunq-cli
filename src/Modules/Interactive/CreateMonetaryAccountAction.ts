@@ -69,6 +69,5 @@ CreateMonetaryAccountAction.id = "create-monetary-account-action";
 CreateMonetaryAccountAction.message = "Create a new monetary account";
 CreateMonetaryAccountAction.handle = handle;
 CreateMonetaryAccountAction.visibility = "AUTHENTICATED";
-CreateMonetaryAccountAction.type = "INTERACTIVE";
 
 export default CreateMonetaryAccountAction;

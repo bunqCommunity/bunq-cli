@@ -35,6 +35,5 @@ CallEndpointAction.id = "call-api-endpoint-action";
 CallEndpointAction.message = "Call an API endpoint";
 CallEndpointAction.handle = handle;
 CallEndpointAction.visibility = "AUTHENTICATED";
-CallEndpointAction.type = "INTERACTIVE";
 
 export default CallEndpointAction;

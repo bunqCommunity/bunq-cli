@@ -48,6 +48,5 @@ RequestSandboxFundsAction.id = "request-sandbox-funds-action";
 RequestSandboxFundsAction.message = "Request sandbox funds";
 RequestSandboxFundsAction.handle = handle;
 RequestSandboxFundsAction.visibility = ["AUTHENTICATED", "SANDBOX"];
-RequestSandboxFundsAction.type = "INTERACTIVE";
 
 export default RequestSandboxFundsAction;
