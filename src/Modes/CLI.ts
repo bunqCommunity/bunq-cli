@@ -55,7 +55,7 @@ export default async bunqCLI => {
     }
 
     // get argument > stored value > default
-    if (API_KEY === "generate" && DEVICE_NAME === "SANDBOX") {
+    if (API_KEY === "generate" && ENVIRONMENT === "SANDBOX") {
         API_KEY = await bunqJSClient.api.sandboxUser.post();
     }
 
