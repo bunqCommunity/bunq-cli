@@ -11,5 +11,9 @@ const AccountsCommand = new CommandLineBunqCLIModule();
 AccountsCommand.command = "accounts";
 AccountsCommand.message = "Fetches all monetary accounts for the current User";
 AccountsCommand.handle = handle;
+AccountsCommand.yargs = yargs => {
+    yargs.command(AccountsCommand.command, AccountsCommand.message);
+    yargs.example("bunq-cli accounts", "Outputs the monetary accounts into the console");
+};
 
 export default AccountsCommand;

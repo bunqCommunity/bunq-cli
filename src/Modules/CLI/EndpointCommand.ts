@@ -5,6 +5,8 @@ import { CommandLineBunqCLIModule } from "../../Types/BunqCLIModule";
 import FilterParser from "../../InputHandlers/FilterParser";
 import MethodParser from "../../InputHandlers/MethodParser";
 
+import EndpointUrlYargsHelper from "../../Yargs/EndpointUrlYargsHelper";
+
 const handle = async (bunqCLI: BunqCLI) => {
     const bunqJSClient = bunqCLI.bunqJSClient;
     const argv = bunqCLI.argv;
@@ -81,5 +83,9 @@ const EndpointCommand = new CommandLineBunqCLIModule();
 EndpointCommand.command = "endpoint";
 EndpointCommand.message = "Call an API endpoint";
 EndpointCommand.handle = handle;
+EndpointCommand.yargsAdvanced = yargsInner => {
+    // run the helper function
+    return EndpointUrlYargsHelper(EndpointCommand)(yargsInner);
+};
 
 export default EndpointCommand;

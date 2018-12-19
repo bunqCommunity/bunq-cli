@@ -1,13 +1,7 @@
-import { CommandLineBunqCLIModule } from "../Types/BunqCLIModule";
 import BunqCLIError from "../Errors";
-import { randomHex } from "../Utils";
+import { CommandLineBunqCLIModule } from "../Types/BunqCLIModule";
 
-import AccountsCommand from "../Modules/CLI/AccountsCommand";
-import EndpointCommand from "../Modules/CLI/EndpointCommand";
-import EventsCommand from "../Modules/CLI/EventsCommand";
-import SandboxKeyCommand from "../Modules/CLI/SandboxKeyCommand";
-import UrlCommand from "../Modules/CLI/UrlCommand";
-import UserCommand from "../Modules/CLI/UserCommand";
+import { randomHex } from "../Utils";
 
 export default async bunqCLI => {
     const argv = bunqCLI.argv;
@@ -16,17 +10,12 @@ export default async bunqCLI => {
     const storage = bunqCLI.storage;
     const subCommand = bunqCLI.cliCommands[0];
 
-    // register the modules in order
-    bunqCLI.modules.push(AccountsCommand);
-    bunqCLI.modules.push(EndpointCommand);
-    bunqCLI.modules.push(EventsCommand);
-    bunqCLI.modules.push(SandboxKeyCommand);
-    bunqCLI.modules.push(UrlCommand);
-    bunqCLI.modules.push(UserCommand);
-
     // filter out commands for the given sub command
     const foundCommand: CommandLineBunqCLIModule | null = bunqCLI.modules.find((module: CommandLineBunqCLIModule) => {
-        return module.command === subCommand;
+        if (module instanceof CommandLineBunqCLIModule) {
+            return module.command === subCommand;
+        }
+        return false;
     });
 
     if (!foundCommand) throw new BunqCLIError("No command given");

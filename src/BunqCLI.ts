@@ -10,8 +10,8 @@ import BunqCLIModule from "./Types/BunqCLIModule";
 // argument parsing with some default values
 const defaultSavePath = path.join(os.homedir(), "bunq-cli.json");
 const defaultOutputLocationPath = path.join(os.homedir(), "bunq-cli-api-data");
-import yargs from "./yargs";
-const argv: any = yargs({ defaultSavePath, defaultOutputLocationPath });
+import Yargs from "./Yargs/Yargs";
+const yargsDefault: any = Yargs({ defaultSavePath, defaultOutputLocationPath });
 import { normalizePath, write, writeLine, startTime, endTimeFormatted } from "./Utils";
 
 // setup helpers
@@ -25,6 +25,21 @@ import ConsoleOutput from "./OutputHandlers/ConsoleOutput";
 // command modes
 import InteractiveMode from "./Modes/Interactive";
 import CLIMode from "./Modes/CLI";
+
+// cli commands
+import AccountsCommand from "./Modules/CLI/AccountsCommand";
+import EndpointCommand from "./Modules/CLI/EndpointCommand";
+import EventsCommand from "./Modules/CLI/EventsCommand";
+import SandboxKeyCommand from "./Modules/CLI/SandboxKeyCommand";
+import UrlCommand from "./Modules/CLI/UrlCommand";
+import UserCommand from "./Modules/CLI/UserCommand";
+
+// interactive actions
+import SetupApiKeyAction from "./Modules/Interactive/SetupApiKeyAction";
+import ViewMonetaryAccountsAction from "./Modules/Interactive/ViewMonetaryAccountsAction";
+import CallEndpointAction from "./Modules/Interactive/CallEndpointAction";
+import CreateMonetaryAccountAction from "./Modules/Interactive/CreateMonetaryAccountAction";
+import RequestSandboxFundsAction from "./Modules/Interactive/RequestSandboxFundsAction";
 
 export default class BunqCLI {
     public bunqJSClient: BunqJSClient;
@@ -59,13 +74,6 @@ export default class BunqCLI {
     private modules: BunqCLIModule[] = [];
 
     constructor() {
-        this.argv = argv;
-        this.interactive = argv._.length === 0 || argv._.includes("interactive");
-
-        if (!this.interactive) {
-            this.cliCommands = argv._;
-        }
-
         this.setup();
     }
 
@@ -84,6 +92,29 @@ export default class BunqCLI {
      * Basic input parsing before starting the client
      */
     private setup() {
+        // CLI commands
+        this.modules.push(UserCommand);
+        this.modules.push(AccountsCommand);
+        this.modules.push(EventsCommand);
+        this.modules.push(SandboxKeyCommand);
+        this.modules.push(EndpointCommand);
+        this.modules.push(UrlCommand);
+
+        // Interactive commands, order matters for these!
+        this.modules.push(ViewMonetaryAccountsAction);
+        this.modules.push(CallEndpointAction);
+        this.modules.push(CreateMonetaryAccountAction);
+        this.modules.push(RequestSandboxFundsAction);
+        this.modules.push(SetupApiKeyAction);
+
+        // parse the yargs helpers and arguments
+        this.argv = yargsDefault(this.modules);
+
+        // check if we're in interactive mode or CLI mode and parse arguments acordingly
+        this.interactive = this.argv._.length === 0 || this.argv._.includes("interactive");
+        if (!this.interactive) {
+            this.cliCommands = this.argv._;
+        }
         if (!this.interactive && !this.argv.output) {
             this.argv.output = "console";
         }

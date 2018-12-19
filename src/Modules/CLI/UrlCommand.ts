@@ -6,6 +6,8 @@ import UrlParser from "../../InputHandlers/UrlParser";
 import DataParser from "../../InputHandlers/DataParser";
 import MethodParser from "../../InputHandlers/MethodParser";
 
+import EndpointUrlYargsHelper from "../../Yargs/EndpointUrlYargsHelper";
+
 const handle = async (bunqCLI: BunqCLI) => {
     const bunqJSClient = bunqCLI.bunqJSClient;
     const argv = bunqCLI.argv;
@@ -39,5 +41,9 @@ const UrlCommand = new CommandLineBunqCLIModule();
 UrlCommand.command = "url";
 UrlCommand.message = "Call a specific url with the given parameters and data";
 UrlCommand.handle = handle;
+UrlCommand.yargsAdvanced = yargsInner => {
+    // run the helper function
+    return EndpointUrlYargsHelper(UrlCommand)(yargsInner);
+}
 
 export default UrlCommand;

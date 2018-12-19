@@ -19,12 +19,20 @@ export class InteractiveBunqCLIModule extends BunqCLIModule {
     public visibility?: BunqCLIVisibilityTypes | BunqCLIVisibilityTypes[];
 }
 
+// to set the argv when a advanced command is matching
+export type YargsAdvancedCallable = (argv: any) => void;
+
 export class CommandLineBunqCLIModule extends BunqCLIModule {
     public type: BunqCLIModuleType = "CLI";
     // the actual sub command users have to enter to use this command
     public command: string;
     // if true, will be run without setting up the bunqjsclient
     public unauthenticated: boolean = false;
+    // advanced function which returns a deeper nested argv object
+    public yargsAdvanced?: (yargs: any) => any;
+    // basic function which only expects the command to modify the yargs command list
+    // useful for adding .option() commands for example
+    public yargs?: (yargs: any) => any;
 }
 
 export default BunqCLIModule;

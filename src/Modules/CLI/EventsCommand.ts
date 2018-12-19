@@ -18,5 +18,10 @@ const EventsCommand = new CommandLineBunqCLIModule();
 EventsCommand.command = "events";
 EventsCommand.message = "Fetches all events for the current user";
 EventsCommand.handle = handle;
+EventsCommand.yargs = yargs => {
+    yargs.command(EventsCommand.command, EventsCommand.message);
+    yargs.example("bunq-cli events --pretty --clean", "Quickly check the events for the account");
+    yargs.example("bunq-cli events --output=file", "Output the direct API output into a new file");
+};
 
 export default EventsCommand;

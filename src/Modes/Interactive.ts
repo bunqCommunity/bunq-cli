@@ -1,29 +1,17 @@
 import chalk from "chalk";
 const { Select } = require("enquirer");
 const packageInfo: any = require("../../package.json");
+
 import { DoneError } from "../Errors";
-import BunqCLIModule, { InteractiveBunqCLIModule } from "../Types/BunqCLIModule";
+import { InteractiveBunqCLIModule } from "../Types/BunqCLIModule";
+import SetupApiKeyAction from "../Modules/Interactive/SetupApiKeyAction";
 
 import { writeLine, clearConsole, separatorChoiceOption, formatMoney } from "../Utils";
 import PrettyErrorHandler from "../PrettyErrorHandler";
 
-// interactive actio
-import SetupApiKeyAction from "../Modules/Interactive/SetupApiKeyAction";
-import ViewMonetaryAccountsAction from "../Modules/Interactive/ViewMonetaryAccountsAction";
-import CallEndpointAction from "../Modules/Interactive/CallEndpointAction";
-import CreateMonetaryAccountAction from "../Modules/Interactive/CreateMonetaryAccountAction";
-import RequestSandboxFundsAction from "../Modules/Interactive/RequestSandboxFundsAction";
-
 export default async bunqCLI => {
     clearConsole();
     writeLine(chalk.blue(`bunq-cli v${packageInfo.version} - interactive mode`));
-
-    // register the modules in order
-    bunqCLI.modules.push(ViewMonetaryAccountsAction);
-    bunqCLI.modules.push(CallEndpointAction);
-    bunqCLI.modules.push(CreateMonetaryAccountAction);
-    bunqCLI.modules.push(RequestSandboxFundsAction);
-    bunqCLI.modules.push(SetupApiKeyAction);
 
     // do an initial run
     await SetupApiKeyAction.handle(bunqCLI, true);
