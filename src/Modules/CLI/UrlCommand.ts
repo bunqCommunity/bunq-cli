@@ -44,6 +44,6 @@ UrlCommand.handle = handle;
 UrlCommand.yargsAdvanced = yargsInner => {
     // run the helper function
     return EndpointUrlYargsHelper(UrlCommand)(yargsInner);
-}
+};
 
 export default UrlCommand;
