@@ -1,4 +1,4 @@
-import BunqCLIError, { DoneError } from "./Errors";
+import BunqCLIError, { DoneError } from "../Types/Errors";
 import chalk from "chalk";
 
 export default error => {

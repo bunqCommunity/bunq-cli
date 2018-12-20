@@ -5,18 +5,19 @@ import { InteractiveBunqCLIModule } from "../../Types/BunqCLIModule";
 import CounterpartyAlias from "@bunq-community/bunq-js-client/dist/Types/CounterpartyAlias";
 
 import { writeLine, formatMoney, formatIban } from "../../Utils";
+import { accountTypeFormatter } from "../../HumanOutputFormatters";
 
 const handle = async (bunqCLI: BunqCLI) => {
     writeLine(chalk.blue(`View your monetary accounts`));
     writeLine("");
 
-    const spacerString = "".padEnd(60, "─");
+    const spacerString = "".padEnd(50, "─");
     const whiteSpacer = chalk.gray(spacerString);
     const graySpacer = chalk.gray(spacerString);
 
     const accountText = chalk.blue("Account") + "";
     const balanceText = chalk.blue("Balance") + "";
-    const ibanText = chalk.blue("  Alias") + "";
+    const ibanText = chalk.blue("  Type") + "";
     const accountColumnText = accountText.padEnd(30, " ");
     const balanceColumnText = balanceText.padStart(20, " ");
     const ibanColumnText = ibanText.padEnd(15, " ");
@@ -28,22 +29,18 @@ const handle = async (bunqCLI: BunqCLI) => {
     bunqCLI.monetaryAccounts.forEach((monetaryAccount: MonetaryAccount) => {
         const prettyBalance = formatMoney(monetaryAccount.balance.value);
 
-        const ibanAlias = monetaryAccount.alias.find((alias: CounterpartyAlias) => {
-            return alias.type === "IBAN";
-        });
-
         const accountColumn = chalk.cyan(monetaryAccount.description).padEnd(30, " ");
         const balanceColumn = prettyBalance.padStart(10, " ");
-        const ibanColumn = formatIban(ibanAlias.value).padStart(20, " ");
+        const typeColumn = accountTypeFormatter(monetaryAccount.accountType).padStart(10, " ");
 
-        writeLine(`${accountColumn}${balanceColumn}  ${ibanColumn}`);
+        writeLine(`${accountColumn}${balanceColumn}  ${typeColumn}`);
         monetaryAccount.alias.forEach((alias: CounterpartyAlias) => {
-            if (alias.type === "IBAN") return;
             let prettyAliasType = alias.type;
-            if (alias.type === "PHONE_NUMBER") prettyAliasType = "Phone number";
-            if (alias.type === "EMAIL") prettyAliasType = "Email";
+            if (alias.type === "IBAN") prettyAliasType = `🏦   ${formatIban(alias.value)}`;
+            if (alias.type === "PHONE_NUMBER") prettyAliasType = `📱   ${alias.value}`;
+            if (alias.type === "EMAIL") prettyAliasType = `✉️   ${alias.value}`;
 
-            writeLine(`${"".padEnd(2, " ")}${prettyAliasType.padEnd(30, " ")}${alias.value}`);
+            writeLine(`  ${prettyAliasType}`);
         });
 
         writeLine(graySpacer);

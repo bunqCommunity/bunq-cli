@@ -1,5 +1,5 @@
 import BunqCLI from "../../BunqCLI";
-import BunqCLIError from "../../Errors";
+import BunqCLIError from "../../Types/Errors";
 import { CommandLineBunqCLIModule } from "../../Types/BunqCLIModule";
 
 import FilterParser from "../../InputHandlers/FilterParser";

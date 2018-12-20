@@ -3,7 +3,7 @@ import * as fs from "fs";
 import * as path from "path";
 import chalk from "chalk";
 import BunqJSClient from "@bunq-community/bunq-js-client";
-import BunqCLIError from "./Errors";
+import BunqCLIError from "./Types/Errors";
 import MonetaryAccount from "./Types/MonetaryAccount";
 import BunqCLIModule from "./Types/BunqCLIModule";
 

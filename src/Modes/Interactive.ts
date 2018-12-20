@@ -2,12 +2,12 @@ import chalk from "chalk";
 const { Select } = require("enquirer");
 const packageInfo: any = require("../../package.json");
 
-import { DoneError } from "../Errors";
+import { DoneError } from "../Types/Errors";
 import { InteractiveBunqCLIModule } from "../Types/BunqCLIModule";
 import SetupApiKeyAction from "../Modules/Interactive/SetupApiKeyAction";
 
 import { writeLine, clearConsole, separatorChoiceOption, formatMoney } from "../Utils";
-import PrettyErrorHandler from "../PrettyErrorHandler";
+import PrettyErrorHandler from "../OutputHandlers/PrettyErrorHandler";
 
 export default async bunqCLI => {
     clearConsole();

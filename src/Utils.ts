@@ -110,6 +110,10 @@ export const endTimeFormatted = startTime => {
     return timePassedLabel;
 };
 
+/**
+ * Strips some of the basic wrappers that bunq users like Response and arrays from an object
+ * @param data
+ */
 export const cleanupData = data => {
     if (data.Response) {
         data = data.Response;
