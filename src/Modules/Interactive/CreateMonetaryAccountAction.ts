@@ -1,14 +1,15 @@
 import chalk from "chalk";
 import * as awaiting from "awaiting";
-import BunqCLI from "../../../BunqCLI";
+import BunqCLI from "../../BunqCLI";
+import { InteractiveBunqCLIModule } from "../../Types/BunqCLIModule";
 
-import selectMonetaryAccountTypePrompt from "../Prompts/select_monetary_account_type";
-import genericStringPrompt from "../Prompts/generic_string_prompt";
-import colorPickerPrommpt from "../Prompts/color_picker";
+import selectMonetaryAccountTypePrompt from "../../Prompts/select_monetary_account_type";
+import genericStringPrompt from "../../Prompts/generic_string_prompt";
+import colorPickerPrommpt from "../../Prompts/color_picker";
 
-import { write, writeLine, startTime, endTimeFormatted } from "../../../Utils";
+import { write, writeLine, startTime, endTimeFormatted } from "../../Utils";
 
-export default async (bunqCLI: BunqCLI) => {
+const handle = async (bunqCLI: BunqCLI) => {
     writeLine(chalk.blue(`Creating a new monetary account`));
     writeLine("");
 
@@ -62,3 +63,11 @@ export default async (bunqCLI: BunqCLI) => {
 
     return await awaiting.delay(250);
 };
+
+const CreateMonetaryAccountAction = new InteractiveBunqCLIModule();
+CreateMonetaryAccountAction.id = "create-monetary-account-action";
+CreateMonetaryAccountAction.message = "Create a new monetary account";
+CreateMonetaryAccountAction.handle = handle;
+CreateMonetaryAccountAction.visibility = "AUTHENTICATED";
+
+export default CreateMonetaryAccountAction;

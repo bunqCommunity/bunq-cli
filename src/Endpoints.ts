@@ -1,7 +1,7 @@
 import * as awaiting from "awaiting";
 import BunqCLI from "./BunqCLI";
-import customInputIdPrompt from "./Modes/Interactive/Prompts/custom_input_id";
-import monetaryAccountIdPrompt from "./Modes/Interactive/Prompts/select_monetary_account_id";
+import customInputIdPrompt from "./Prompts/custom_input_id";
+import monetaryAccountIdPrompt from "./Prompts/select_monetary_account_id";
 import { capitalizeFirstLetter } from "./Utils";
 
 class Endpoint {

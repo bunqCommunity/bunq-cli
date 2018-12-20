@@ -1,4 +1,4 @@
-import BunqCLIError from "../Errors";
+import BunqCLIError from "../Types/Errors";
 import BunqCLI from "../BunqCLI";
 
 export default (dataInput, bunqCLI: BunqCLI) => {

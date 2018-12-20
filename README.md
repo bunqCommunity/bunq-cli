@@ -33,13 +33,13 @@ bunq-cli --save
 ```
 
 ## Roadmap
-
--   Add a password option to allow for production API key storage
--   Support for both regular API key and OAuth logins through QR codes.
--   View current user, monetary accounts and other API data in interactive mode.
--   Transfers between own accounts by ID and description for CLI mode and through the UI in interactive mode.
-    -   `bunq-cli transfer --transfer-from Shopping --transfer-to Savings --amount 10`
-    -   `bunq-cli transfer --transfer-from-id 1234 --transfer-to-id 4321 --amount='12.36' --description='Less shopping'`
+ - Add a password option to allow for production API key storage
+ - Turn commands and actions into a module-like system
+ - Support for both regular API key and OAuth logins through QR codes.
+ - View current user, monetary accounts and other API data in interactive mode.
+ - Transfers between own accounts by ID and description for CLI mode and through the UI in interactive mode.
+    - `bunq-cli --cli --transfer --transfer-from Shopping --transfer-to Savings --amount 10`
+    - `bunq-cli --cli --transfer --transfer-from-id 1234 --transfer-to-id 4321 --amount='12.36' --description='Less shopping'`
 
 ## Options
 
@@ -52,7 +52,7 @@ Make sure to use `--help` to view the specific options you can use for each sub 
 
 ### Generic options
 
-These are the most basic options that you'll need. If `--save` or `-s` isn't defined, bunqJSClient will do everything in memory without writing data to a file. Subsequent API calls will be faster if you do use this option since it won't have to setup a new API session with bunq.
+These are the most basic options that you'll need. If `--memory` is defined, the bunqJSClient will do everything in memory without writing data to a file. Subsequent API calls will be faster if you do not use this option since it won't have to setup a new API session with bunq the next time you use bunq-cli.
 
 -   `--save`/`-s` Location to store the API session info, defaults to `$HOME/bunq-cli.json`. Use the --memory option to ignore stored data.
 -   `--memory` Ignores the stored session info and does everything in memory, useful for testing sandbox scripts without removing the stored key.
@@ -68,12 +68,12 @@ These are the most basic options that you'll need. If `--save` or `-s` isn't def
 ### Optional parameters
 
 -   `--method` API method to use, defaults to "LIST".
--   `--data` a string with JSON which is the data that well be sent in POST/PUT requests.
+-   `--data` A string with JSON which is the data that well be sent in POST/PUT requests.
 -   `--count`, `--older-id` and `--newer-id` for filtering LIST requests like described in the bunq docs.
--   `--account` to define which MonetaryAccount should be used by account description.
--   `--accountId`/`--account-id` to define which MonetaryAccount should be used by account ID.
--   `--account` to define which MonetaryAccount should be used by account description.
--   `--eventId`/`--event-id` to define which object should be fetched, required for most GET endpoints.
+-   `--account` To define which MonetaryAccount should be used by account description.
+-   `--accountId`/`--account-id` To define which MonetaryAccount should be used by account ID.
+-   `--account` To define which MonetaryAccount should be used by account description.
+-   `--eventId`/`--event-id` To define which object should be fetched, required for most GET endpoints.
 -   `--pretty` Whether to prettify the JSON output or not. You can give it a string to use as spacer, defaults to 2 spaces, use '\t' to format with tabs for example
 -   `--clean` Will attempt to cleanup some of the wrappers for the bunq API. For example Arrays with a single value or the Response object.
 
@@ -83,17 +83,17 @@ By default the `--output` mode is set to `console` when using sub commands.
 
 ### Basic commands
 
--   `bunq-cli user` fetches the User object.
--   `bunq-cli accounts` fetches all monetary accounts for the current User object.
--   `bunq-cli events` fetches all events using the `/user/{userId}/event` endpoint.
--   `bunq-cli create-key` Creates a new Sandbox environment API key and outputs it
+-   `bunq-cli user` Fetches the User info.
+-   `bunq-cli accounts` Fetches all monetary accounts for the current User.
+-   `bunq-cli events` Fetches all events using the `/user/{userId}/event` endpoint.
+-   `bunq-cli create-key` Creates a new Sandbox environment API key and outputs it.
 
 ## Advanced commands
 
 These commands require more knowledge of the API but supply a few useful ways to make using the correct endpoints and accounts easier.
 
--   `bunq-cli endpoint <endpoint-name>` a specific endpoint you want to call. Only a few basic LIST and GET endpoints are supported by this, run it without a value to view the list of supported shorthand endpoints
--   `bunq-cli url <url>` a specific URL you wish to call. This is the more advanced option compared to endpoint since you have to define the entire URL yourself.
+-   `bunq-cli endpoint <endpoint-name>` A specific endpoint you want to call. Only a few basic LIST and GET endpoints are supported by this, run it without a value to view the list of supported shorthand endpoints
+-   `bunq-cli url <url>` A specific URL you wish to call. This is the more advanced option compared to endpoint since you have to define the entire URL yourself.
     Some helpers when using this command are the following:
 
 Using `UserID` in the url will automatically be replaced by the current user's ID. For example `/user/UserID` becomes `/user/1234`.

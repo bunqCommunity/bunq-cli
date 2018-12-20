@@ -1,30 +1,26 @@
 import chalk from "chalk";
 const { Select } = require("enquirer");
-const packageInfo: any = require("../../../package.json");
-import { writeLine, clearConsole, separatorChoiceOption, formatMoney } from "../../Utils";
-import { DoneError } from "../../Errors";
-import PrettyErrorHandler from "../../PrettyErrorHandler";
+const packageInfo: any = require("../../package.json");
 
-// interactive actions
-import SetupApiKey from "./Actions/SetupApiKey";
-import CreateMonetaryAccount from "./Actions/CreateMonetaryAccount";
-import RequestSandboxFunds from "./Actions/RequestSandboxFunds";
-import CallEndpoint from "./Actions/CallEndpoint";
-import ViewMonetaryAccounts from "./Actions/ViewMonetaryAccounts";
+import { DoneError } from "../Types/Errors";
+import { InteractiveBunqCLIModule } from "../Types/BunqCLIModule";
+import SetupApiKeyAction from "../Modules/Interactive/SetupApiKeyAction";
+
+import { writeLine, clearConsole, separatorChoiceOption, formatMoney } from "../Utils";
+import PrettyErrorHandler from "../OutputHandlers/PrettyErrorHandler";
 
 export default async bunqCLI => {
     clearConsole();
     writeLine(chalk.blue(`bunq-cli v${packageInfo.version} - interactive mode`));
 
     // do an initial run
-    await SetupApiKey(bunqCLI, true);
+    await SetupApiKeyAction.handle(bunqCLI, true);
 
     return nextCycle(bunqCLI);
 };
 
 const inputCycle = async (bunqCLI, firstRun = false) => {
     const isReady = !!bunqCLI.bunqJSClient.apiKey;
-    const isSandbox = bunqCLI.bunqJSClient.Session.environment === "SANDBOX";
 
     if (firstRun) {
         writeLine("");
@@ -35,7 +31,6 @@ const inputCycle = async (bunqCLI, firstRun = false) => {
         const totalAccountBalance = bunqCLI.monetaryAccounts.reduce((total, account) => {
             return total + parseFloat(account.balance.value);
         }, 0);
-
         writeLine(`User info: ${chalk.cyan(bunqCLI.user.display_name)}`);
         writeLine(`Monetary accounts: ${chalk.cyan(bunqCLI.monetaryAccounts.length)}`);
         writeLine(`Total account balance: ${chalk.cyan(formatMoney(totalAccountBalance))}`);
@@ -44,16 +39,22 @@ const inputCycle = async (bunqCLI, firstRun = false) => {
     }
     writeLine(""); // end api info
 
-    const choices = [];
-    if (isReady) {
-        choices.push({ message: "View your monetary accounts", value: "view-monetary-account" });
-        choices.push({ message: "Call an API endpoint", value: "call-endpoint" });
-        choices.push({ message: "Create a new monetary account", value: "create-monetary-account" });
-        if (isSandbox) {
-            choices.push({ message: "Add funds to sandbox account", value: "request-sandbox-funds" });
+    // filter out modules based on the visibility setting
+    const allowedModules = bunqCLI.modules.filter((module: InteractiveBunqCLIModule) => {
+        if (module instanceof InteractiveBunqCLIModule) {
+            if (Array.isArray(module.visibility)) {
+                return module.visibility.every(bunqCLI.checkModuleVisibility);
+            }
+            return bunqCLI.checkModuleVisibility(module.visibility);
         }
-    }
-    choices.push({ message: isReady ? "Modify API key" : "Setup an API key", value: "setup-api-key" });
+        return false;
+    });
+
+    const choices = [];
+    allowedModules.forEach((allowedModule: InteractiveBunqCLIModule) => {
+        choices.push({ message: allowedModule.message, value: allowedModule.id });
+    });
+
     choices.push(separatorChoiceOption());
     choices.push({ message: "Refresh", value: "refresh" });
     choices.push({ message: "Quit", value: "quit" });
@@ -64,23 +65,24 @@ const inputCycle = async (bunqCLI, firstRun = false) => {
     }).run();
 
     clearConsole();
+
+    // standard hard coded choices
     switch (result) {
-        case "call-endpoint":
-            return CallEndpoint(bunqCLI);
-        case "request-sandbox-funds":
-            return RequestSandboxFunds(bunqCLI);
-        case "create-monetary-account":
-            return CreateMonetaryAccount(bunqCLI);
-        case "setup-api-key":
-            return SetupApiKey(bunqCLI);
-        case "view-monetary-account":
-            return ViewMonetaryAccounts(bunqCLI);
         case "refresh":
             // do nothing and re-render
             return;
         case "quit":
             // break out of loop
             throw new DoneError();
+        default:
+            // check the modules
+            const foundModule = bunqCLI.modules.find((module: InteractiveBunqCLIModule) => {
+                return module.id === result;
+            });
+            if (foundModule) {
+                // call the module if found
+                return foundModule.handle(bunqCLI);
+            }
     }
 };
 

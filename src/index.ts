@@ -1,7 +1,7 @@
 require("dotenv").config();
 
 import BunqCLI from "./BunqCLI";
-import PrettyErrorHandler from "./PrettyErrorHandler";
+import PrettyErrorHandler from "./OutputHandlers/PrettyErrorHandler";
 
 const bunqCLI = new BunqCLI();
 bunqCLI

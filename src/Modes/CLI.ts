@@ -1,12 +1,7 @@
-import UrlCommand from "./Commands/Url";
-import UserCommand from "./Commands/User";
-import EventsCommand from "./Commands/Events";
-import AccountsCommand from "./Commands/Accounts";
-import EndpointCommand from "./Commands/Endpoint";
-import SandboxKeyCommand from "./Commands/SandboxKey";
+import BunqCLIError from "../Types/Errors";
+import { CommandLineBunqCLIModule } from "../Types/BunqCLIModule";
 
-import BunqCLIError from "../../Errors";
-import { randomHex } from "../../Utils";
+import { randomHex } from "../Utils";
 
 export default async bunqCLI => {
     const argv = bunqCLI.argv;
@@ -15,10 +10,19 @@ export default async bunqCLI => {
     const storage = bunqCLI.storage;
     const subCommand = bunqCLI.cliCommands[0];
 
-    // commands which don't require a bunqjsclient setup:
-    switch (subCommand) {
-        case "create-key":
-            return SandboxKeyCommand(bunqCLI);
+    // filter out commands for the given sub command
+    const foundCommand: CommandLineBunqCLIModule | null = bunqCLI.modules.find((module: CommandLineBunqCLIModule) => {
+        if (module instanceof CommandLineBunqCLIModule) {
+            return module.command === subCommand;
+        }
+        return false;
+    });
+
+    if (!foundCommand) throw new BunqCLIError("No command given");
+
+    // run the command without setting up authentication first
+    if (foundCommand.unauthenticated) {
+        return foundCommand.handle(bunqCLI);
     }
 
     // attempt to get stored data if saveData is true
@@ -40,12 +44,12 @@ export default async bunqCLI => {
     }
 
     // get argument > stored value > default
-    if (API_KEY === "generate" && DEVICE_NAME === "SANDBOX") {
+    if (API_KEY === "generate" && ENVIRONMENT === "SANDBOX") {
         API_KEY = await bunqJSClient.api.sandboxUser.post();
     }
 
     // final fallback in case no key is set
-    if (!API_KEY) throw new Error("No API key set as --api-key option or BUNQ_CLI_API_KEY environment");
+    if (!API_KEY) throw new Error("No API key set as --api-key option or BUNQ_CLI_API_KEY environment value");
 
     // check input values
     if (saveData) storage.set("ENVIRONMENT", ENVIRONMENT);
@@ -70,18 +74,6 @@ export default async bunqCLI => {
     await bunqJSClient.registerDevice(DEVICE_NAME);
     await bunqJSClient.registerSession();
 
-    switch (subCommand) {
-        case "user":
-            return UserCommand(bunqCLI);
-        case "accounts":
-            return AccountsCommand(bunqCLI);
-        case "events":
-            return EventsCommand(bunqCLI);
-        case "endpoint":
-            return EndpointCommand(bunqCLI);
-        case "url":
-            return UrlCommand(bunqCLI);
-    }
-
-    throw new BunqCLIError("No command given");
+    // run the actual command after authentication
+    return foundCommand.handle(bunqCLI);
 };
