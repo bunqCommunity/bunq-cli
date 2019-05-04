@@ -40,6 +40,7 @@ import ViewMonetaryAccountsAction from "./Modules/Interactive/ViewMonetaryAccoun
 import CallEndpointAction from "./Modules/Interactive/CallEndpointAction";
 import CreateMonetaryAccountAction from "./Modules/Interactive/CreateMonetaryAccountAction";
 import RequestSandboxFundsAction from "./Modules/Interactive/RequestSandboxFundsAction";
+import OrderCardAction from "./Modules/Interactive/OrderCardAction";
 
 export default class BunqCLI {
     public bunqJSClient: BunqJSClient;
@@ -106,6 +107,7 @@ export default class BunqCLI {
         this.modules.push(CreateMonetaryAccountAction);
         this.modules.push(RequestSandboxFundsAction);
         this.modules.push(SetupApiKeyAction);
+        this.modules.push(OrderCardAction);
 
         // parse the yargs helpers and arguments
         this.argv = yargsDefault(this.modules);
@@ -124,6 +126,11 @@ export default class BunqCLI {
             // custom or default value if defined
             this.saveLocation = this.argv.save !== true ? normalizePath(this.argv.save) : defaultSavePath;
             this.saveData = true;
+            this.storage = CustomStore(this.saveLocation);
+        }
+
+        if (this.argv.reset) {
+            this.storage.remove("API_KEY");
         }
 
         // api output settings
@@ -165,7 +172,6 @@ export default class BunqCLI {
         }
 
         // setup the actual bunqjsclient and endpoints
-        this.storage = CustomStore(this.saveLocation);
         this.bunqJSClient = new BunqJSClient(this.storage);
 
         this.endpoints = Endpoints(this);

@@ -29,6 +29,7 @@ Or use a command: bunq-cli <sub-command> [options]`
 
             pretty: "Makes the JSON output more readable when outputting to console or files",
             clean: "Simplifies some API output like removing the Response wrapper",
+            reset: "Resets the stored API keys",
 
             apiKey: "The bunq API key, creates a sandbox key by default",
             deviceName: "Device name to identify the API key",
@@ -37,10 +38,11 @@ Or use a command: bunq-cli <sub-command> [options]`
         })
         .default({
             save: defaultSavePath,
-            output: false,
+            output: "file",
             memory: false,
             overwrite: false,
             clean: false,
+            reset: false,
             pretty: false,
             "output-location": defaultOutputLocationPath,
 
@@ -57,7 +59,7 @@ Or use a command: bunq-cli <sub-command> [options]`
         })
         .normalize(["output-location"])
         .string(["apiKey", "deviceName", "encryptionKey"])
-        .boolean(["memory", "overwrite", "clean", "pretty"])
+        .boolean(["memory", "overwrite", "clean", "pretty", "reset"])
         .choices({
             output: ["file", "console", false],
             environment: ["PRODUCTION", "SANDBOX"]

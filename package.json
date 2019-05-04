@@ -23,7 +23,7 @@
         "preversion": "rm -r dist/* && npm run build"
     },
     "dependencies": {
-        "@bunq-community/bunq-js-client": "^0.35.4",
+        "@bunq-community/bunq-js-client": "^0.41.1",
         "awaiting": "^3.0.0",
         "chalk": "^2.4.1",
         "dotenv": "^6.1.0",
