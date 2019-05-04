@@ -1,6 +1,6 @@
 {
     "name": "@bunq-community/bunq-cli",
-    "version": "0.3.1",
+    "version": "0.4.0",
     "license": "MIT",
     "main": "./index.js",
     "types": "./dist/BunqCLI.d.ts",
