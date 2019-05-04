@@ -40,6 +40,7 @@ import ViewMonetaryAccountsAction from "./Modules/Interactive/ViewMonetaryAccoun
 import CallEndpointAction from "./Modules/Interactive/CallEndpointAction";
 import CreateMonetaryAccountAction from "./Modules/Interactive/CreateMonetaryAccountAction";
 import RequestSandboxFundsAction from "./Modules/Interactive/RequestSandboxFundsAction";
+import ViewUserAction from "./Modules/Interactive/ViewUser";
 import OrderCardAction from "./Modules/Interactive/OrderCardAction";
 
 export default class BunqCLI {
@@ -103,6 +104,7 @@ export default class BunqCLI {
 
         // Interactive commands, order matters for these!
         this.modules.push(ViewMonetaryAccountsAction);
+        this.modules.push(ViewUserAction);
         this.modules.push(CallEndpointAction);
         this.modules.push(CreateMonetaryAccountAction);
         this.modules.push(RequestSandboxFundsAction);

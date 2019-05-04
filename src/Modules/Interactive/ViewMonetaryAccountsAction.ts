@@ -11,6 +11,8 @@ const handle = async (bunqCLI: BunqCLI) => {
     writeLine(chalk.blue(`View your monetary accounts`));
     writeLine("");
 
+    await bunqCLI.getMonetaryAccounts(true);
+
     const spacerString = "".padEnd(50, "─");
     const whiteSpacer = chalk.gray(spacerString);
     const graySpacer = chalk.gray(spacerString);
